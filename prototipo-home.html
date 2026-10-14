@@ -1,0 +1,883 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Comunidad Cristiana Web</title>
+<link rel="icon" type="image/png" href="img/emblema-comunidad-cristiana.png">
+<meta name="description" content="Prototipo conceptual del portal del semanario católico Comunidad Cristiana, Arquidiócesis de Morelia.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;0,7..72,700;1,7..72,400&family=Source+Sans+3:wght@400;600;700&display=swap">
+<style>
+  /* Layout: cabecera en bloque carmesí como la portada impresa (cintillo teal + mancheta + menú), cuerpo blanco en rejilla de 12 columnas, pie carmesí. */
+  :root {
+    --papel: #FFFFFF;          /* fondo de lectura: blanco puro */
+    --superficie: #F6F3F4;     /* bloques secundarios, gris con sesgo al carmesí */
+    --tinta: #1F1A1C;          /* texto principal */
+    --titular: #4A0C22;        /* titulares: vino profundo derivado del carmesí (contraste 13:1 sobre blanco) */
+    --tinta-suave: #5A5357;    /* texto secundario */
+    --carmesi: #C80C47;        /* rojo institucional del logotipo: fondos y botones */
+    --carmesi-texto: #B00B3F;  /* carmesí para texto pequeño sobre blanco */
+    --carmesi-hover: #A80A3C;
+    --rosa-suave: #FBE8EE;     /* tinte del carmesí para destacados */
+    --sobre-carmesi: #FFFFFF;  /* blanco del logotipo */
+    --teal: #5C7B7E;           /* tono terciario: cintillo, fechas, metadatos */
+    --teal-texto: #4B686B;     /* teal para texto pequeño sobre blanco */
+    --linea: #E4DEE0;
+    --font-mancheta: "Cinzel", "Trajan Pro", Georgia, serif;
+    --font-lectura: "Literata", Georgia, "Times New Roman", serif;
+    --font-ui: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --papel: #161214; --superficie: #211B1E; --tinta: #F1ECEE; --tinta-suave: #B9AFB4; --titular: #F8E3EA;
+      --carmesi: #B80B42; --carmesi-texto: #FF7A9F; --carmesi-hover: #D0124F; --rosa-suave: #3A1A25;
+      --sobre-carmesi: #FFFFFF; --teal: #4F6C6F; --teal-texto: #9BC0C3; --linea: #3A3236; color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --papel: #161214; --superficie: #211B1E; --tinta: #F1ECEE; --tinta-suave: #B9AFB4; --titular: #F8E3EA;
+    --carmesi: #B80B42; --carmesi-texto: #FF7A9F; --carmesi-hover: #D0124F; --rosa-suave: #3A1A25;
+    --sobre-carmesi: #FFFFFF; --teal: #4F6C6F; --teal-texto: #9BC0C3; --linea: #3A3236; color-scheme: dark;
+  }
+  :root { --mesa: #E7E2E4; --sombra-hoja: rgba(40, 20, 28, .16); }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --mesa: #0A0809; --sombra-hoja: rgba(0, 0, 0, .6); } }
+  :root[data-theme="dark"] { --mesa: #0A0809; --sombra-hoja: rgba(0, 0, 0, .6); }
+  body { background: var(--mesa); color: var(--tinta); font-family: var(--font-ui); font-size: 17px; line-height: 1.6; }
+
+  /* Hoja de periódico: el contenido se imprime sobre una hoja con márgenes, apoyada en la "mesa" */
+  .hoja { background: var(--papel); max-width: 78rem; margin: 0 auto; }
+  @media (min-width: 768px) {
+    .hoja {
+      margin: 2rem auto 3rem; padding: 1.75rem 2.75rem 2rem;
+      /* filo de la hoja + dos hojas apiladas debajo + sombra suave */
+      box-shadow:
+        0 0 0 1px var(--linea),
+        5px 5px 0 -1px var(--papel), 5px 5px 0 0 var(--linea),
+        10px 10px 0 -1px var(--papel), 10px 10px 0 0 var(--linea),
+        0 18px 40px -12px var(--sombra-hoja);
+    }
+  }
+  @media (min-width: 1280px) { .hoja { padding: 2rem 3.5rem 2.25rem; } }
+  /* Folios: línea de página arriba y abajo, con filete doble como en el impreso */
+  .folio { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .25rem 1rem; font-family: var(--font-ui);
+    font-size: .72rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--tinta-suave); }
+  .folio-arriba { padding-bottom: .5rem; margin-bottom: 1rem; border-bottom: 3px double var(--tinta); }
+  .folio-abajo { padding-top: .5rem; margin-top: 1rem; border-top: 3px double var(--tinta); }
+  h1, h2, h3 { text-wrap: balance; }
+  /* Titulares en vino profundo; los títulos de sección llevan una barra carmesí debajo */
+  main h1, main h2, main h3 { color: var(--titular); }
+  main h2::after { content: ""; display: block; width: 3rem; height: 4px; margin-top: .55rem; background: var(--carmesi); border-radius: 2px; }
+  .etiqueta { font-family: var(--font-ui); font-size: .75rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+  .num { font-variant-numeric: tabular-nums; }
+  a:focus-visible, button:focus-visible { outline: 3px solid var(--teal-texto); outline-offset: 3px; border-radius: 2px; }
+  header a:focus-visible, header button:focus-visible, footer a:focus-visible { outline-color: #FFFFFF; }
+  .btn { background: var(--carmesi); color: var(--sobre-carmesi); }
+  .btn:hover { background: var(--carmesi-hover); }
+  .foto { background: linear-gradient(160deg, var(--rosa-suave), var(--carmesi)); }
+  .foto-teal { background: linear-gradient(160deg, var(--teal), #2F4446); }
+  .titular-link { background-image: linear-gradient(currentColor, currentColor); background-size: 0 1px; background-repeat: no-repeat; background-position: 0 100%; transition: background-size .25s; }
+  .titular-link:hover { background-size: 100% 1px; color: var(--carmesi-texto); }
+
+  /* ============ ANIMACIONES DE PERIÓDICO ============ */
+  /* Solo se activan si el script añade .js-anim (con JS y sin "reducir movimiento"); sin él, todo se ve estático */
+  body { overflow-x: clip; }
+
+  /* 1. Entrada: el periódico llega enrollado sobre la mesa y se desenrolla al hacer clic.
+        La cubierta (color mesa) tapa la página y se recorta detrás del rollo mientras éste baja. */
+  .cubierta, .rollo { display: none; }
+  .js-anim.cerrado { overflow: hidden; }
+  .js-anim .cubierta { display: grid; place-items: center; position: fixed; inset: 0; z-index: 60; background: var(--mesa); cursor: pointer; }
+  .js-anim .rollo { display: block; }
+  .cubierta-texto { position: absolute; left: 0; right: 0; text-align: center; color: var(--tinta-suave); padding: 0 1rem; transition: opacity .25s; }
+  .cubierta-arriba { top: calc(50% - 130px); }
+  .cubierta-pista { top: calc(50% + 105px); color: var(--carmesi-texto); }
+  .cubierta-pista span { display: inline-block; animation: rebote 1.6s ease-in-out infinite; }
+  @keyframes rebote { 50% { transform: translateY(-5px); } }
+  .cubierta.saliendo .cubierta-texto { opacity: 0; }
+
+  .rollo { position: fixed; z-index: 61; left: 50%; top: 50%; width: min(80vw, 560px); height: 104px; padding: 0; border: 0; background: none; cursor: pointer;
+    transform: translate(-50%, -50%) rotate(-10deg); filter: drop-shadow(0 16px 14px var(--sombra-hoja)); }
+  .rollo.meciendo { animation: mecer 3.2s ease-in-out infinite; }
+  @keyframes mecer { 50% { transform: translate(-50%, -50%) rotate(-7deg); } }
+  /* Cuerpo del cilindro: sombreado de volumen + renglones de texto + calles entre columnas */
+  .rollo-cuerpo { position: absolute; inset: 0; border-radius: 18px / 50%; overflow: hidden;
+    background:
+      linear-gradient(to bottom, rgba(0,0,0,.30), rgba(0,0,0,0) 24%, rgba(255,255,255,.45) 40%, rgba(0,0,0,0) 58%, rgba(0,0,0,.38)),
+      repeating-linear-gradient(90deg, transparent 0 88px, var(--papel) 88px 100px),
+      repeating-linear-gradient(to bottom, transparent 0 4px, color-mix(in srgb, var(--tinta) 16%, transparent) 4px 6px),
+      var(--papel); }
+  .rollo-mancheta { position: absolute; left: 0; right: 0; top: 30%; height: 40%; display: flex; align-items: center; justify-content: center;
+    background: var(--carmesi); color: #fff; font-family: var(--font-mancheta); font-weight: 700; letter-spacing: .08em; white-space: nowrap;
+    font-size: clamp(.95rem, 3.6vw, 1.6rem); box-shadow: inset 0 10px 10px -8px rgba(0,0,0,.35), inset 0 -10px 10px -8px rgba(0,0,0,.35); }
+  /* Extremo del rollo: la espiral del papel enrollado */
+  .rollo-cuerpo::before { content: ""; position: absolute; z-index: 1; left: 0; top: 0; bottom: 0; width: 34px; border-radius: 50%;
+    background: radial-gradient(circle, var(--tinta-suave) 0 2px, transparent 3px),
+      repeating-radial-gradient(circle, var(--papel) 0 3px, var(--linea) 3px 4px, var(--papel) 4px 5px);
+    box-shadow: inset -3px 0 6px rgba(0,0,0,.25); }
+  /* Liga que sujeta el rollo */
+  .rollo-liga { position: absolute; left: 64%; top: -5px; bottom: -5px; width: 13px; border-radius: 5px;
+    background: linear-gradient(90deg, #3E5759, var(--teal) 45%, #2F4446); box-shadow: 0 1px 3px rgba(0,0,0,.35); }
+  .rollo:focus-visible { outline: none; }
+  .rollo:focus-visible .rollo-cuerpo { outline: 3px solid var(--teal-texto); outline-offset: 4px; }
+
+  /* 2. La mancheta se estampa como un sello de imprenta en cuanto el periódico queda abierto */
+  @keyframes sello {
+    0%   { opacity: 0; transform: scale(1.7); filter: blur(5px); }
+    70%  { opacity: 1; transform: scale(.97); filter: blur(0); }
+    100% { opacity: 1; transform: none; }
+  }
+  .js-anim:not(.abierto) :is(.emblema, .mancheta, .lema) { opacity: 0; }
+  .js-anim.abierto .emblema  { animation: sello .55s .05s cubic-bezier(.3,1.3,.5,1) both; }
+  .js-anim.abierto .mancheta { animation: sello .55s .17s cubic-bezier(.3,1.3,.5,1) both; }
+  .js-anim.abierto .lema     { animation: tinta-entra .6s .45s ease-out both; }
+  @keyframes tinta-entra { from { opacity: 0; filter: blur(3px); } to { opacity: .9; filter: none; } }
+
+  /* 3. Al desplazarse, cada nota "se imprime": la tinta se asienta y las fotos pasan bajo el rodillo */
+  .js-anim .revelar { opacity: 0; transform: translateY(18px); filter: blur(3px);
+    transition: opacity .7s ease, transform .7s cubic-bezier(.2,.7,.2,1), filter .9s ease; }
+  .js-anim .revelar.visto { opacity: 1; transform: none; filter: none; }
+  .js-anim .revelar img { clip-path: inset(0 0 100% 0); transition: clip-path 1.1s cubic-bezier(.65,0,.25,1) .15s; }
+  .js-anim .revelar.visto img { clip-path: inset(0); }
+  .js-anim .revelar h2::after { width: 0; transition: width .6s cubic-bezier(.2,.7,.2,1) .45s; }
+  .js-anim .revelar.visto h2::after { width: 3rem; }
+
+  /* 4. Cintillo de última hora */
+  @keyframes cinta { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  .ticker-cinta { display: flex; width: max-content; animation: cinta 45s linear infinite; }
+  .ticker:hover .ticker-cinta, .ticker:focus-within .ticker-cinta { animation-play-state: paused; }
+  .ticker-cinta li { display: flex; align-items: center; white-space: nowrap; padding-right: 2.25rem; }
+  .ticker-cinta li::before { content: "◆"; color: var(--carmesi-texto); font-size: .6rem; margin-right: 2.25rem; }
+  @keyframes parpadeo { 50% { opacity: .35; } }
+  .punto-vivo { width: .5rem; height: .5rem; border-radius: 50%; background: currentColor; animation: parpadeo 1.4s ease-in-out infinite; }
+
+  /* 5. Carrusel de noticias principales: las notas se deslizan como páginas; la barra bajo el número marca el tiempo */
+  main h2.sin-barra::after { display: none; }
+  .carrusel-pista { display: flex; touch-action: pan-y; transition: transform .85s cubic-bezier(.65,0,.25,1); }
+  .diapositiva { flex: 0 0 100%; min-width: 0; transition: opacity .85s ease; }
+  /* La nota que sale se desvanece mientras se desliza; la que entra aparece al mismo tiempo */
+  .diapositiva[aria-hidden="true"] { opacity: 0; }
+  /* Flechas laterales: centradas sobre la foto; en escritorio asoman al margen de la hoja */
+  .flecha { position: absolute; z-index: 2; top: calc((100vw - 2rem) / 3); transform: translateY(-50%);
+    width: 2.75rem; height: 2.75rem; display: grid; place-items: center; border-radius: 50%;
+    background: var(--papel); color: var(--titular); border: 1px solid var(--linea);
+    box-shadow: 0 6px 16px -6px var(--sombra-hoja); transition: background .2s, color .2s, transform .2s; }
+  .flecha:hover { background: var(--carmesi); color: var(--sobre-carmesi); border-color: var(--carmesi); transform: translateY(-50%) scale(1.08); }
+  .flecha-izq { left: .5rem; }
+  .flecha-der { right: .5rem; }
+  @media (min-width: 768px) {
+    .flecha { top: 50%; width: 3rem; height: 3rem; }
+    .flecha-izq { left: -1.5rem; }
+    .flecha-der { right: -1.5rem; }
+  }
+  .punto { position: relative; padding: .35rem 0 .55rem; font-family: var(--font-ui); font-size: .78rem; font-weight: 700;
+    letter-spacing: .1em; text-transform: uppercase; color: var(--tinta-suave); white-space: nowrap; }
+  .punto:hover, .punto[aria-current="true"] { color: var(--carmesi-texto); }
+  .punto .barra { position: absolute; left: 0; bottom: 0; height: 3px; width: 100%; background: var(--carmesi); transform: scaleX(0); transform-origin: left; }
+  .control { width: 2.5rem; height: 2.5rem; display: grid; place-items: center; border: 1px solid var(--linea); border-radius: 2px;
+    color: var(--titular); font-size: 1rem; line-height: 1; background: var(--papel); }
+  .control:hover { border-color: var(--carmesi); color: var(--carmesi-texto); background: var(--rosa-suave); }
+  #carrusel-pausa .icono-play, #carrusel-pausa.en-pausa .icono-pausa { display: none; }
+  #carrusel-pausa.en-pausa .icono-play { display: block; }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; }
+    *, *::before, *::after { animation: none !important; }
+    .ticker-ventana { overflow-x: auto; }
+  }
+</style>
+<script>
+  // Activa las animaciones antes del primer pintado (evita el parpadeo del contenido)
+  try { if (!matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('js-anim'); } catch (e) {}
+</script>
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          papel: 'var(--papel)', superficie: 'var(--superficie)', tinta: 'var(--tinta)', 'tinta-suave': 'var(--tinta-suave)',
+          carmesi: 'var(--carmesi)', 'carmesi-texto': 'var(--carmesi-texto)', 'rosa-suave': 'var(--rosa-suave)',
+          'sobre-carmesi': 'var(--sobre-carmesi)', teal: 'var(--teal)', 'teal-texto': 'var(--teal-texto)', linea: 'var(--linea)'
+        },
+        fontFamily: { mancheta: 'var(--font-mancheta)', lectura: 'var(--font-lectura)', ui: 'var(--font-ui)' }
+      }
+    }
+  };
+</script>
+
+</head>
+<body>
+
+<!-- ============ ENTRADA: PERIÓDICO ENROLLADO ============ -->
+<div id="cubierta" class="cubierta" aria-hidden="true">
+  <p class="cubierta-texto cubierta-arriba etiqueta">Edición N.º 3,263 · Domingo 11 de octubre de 2026</p>
+  <p class="cubierta-texto cubierta-pista etiqueta"><span>Haz clic para abrir el periódico ↓</span></p>
+</div>
+<button id="rollo" class="rollo meciendo" type="button" aria-label="Abrir el periódico">
+  <span class="rollo-cuerpo"><span class="rollo-mancheta" aria-hidden="true">COMUNIDAD CRISTIANA</span></span>
+  <span class="rollo-liga" aria-hidden="true"></span>
+</button>
+<script>
+  // Entrada: el periódico enrollado se desenrolla con un clic (o Enter / Espacio / Esc).
+  // Va en su propio script, junto al rollo, para que un error en otra parte de la página no lo deje sin responder.
+  (function () {
+    const raiz = document.documentElement;
+    const cubierta = document.getElementById('cubierta'), rollo = document.getElementById('rollo');
+    let terminado = false, abriendo = false;
+    function terminar() {
+      if (terminado) return;
+      terminado = true;
+      try { cubierta.remove(); rollo.remove(); } catch (e) { cubierta.style.display = rollo.style.display = 'none'; }
+      raiz.classList.remove('cerrado'); raiz.classList.add('abierto');
+      try { document.dispatchEvent(new Event('periodico-abierto')); } catch (e) {}
+    }
+    const espera = (ms) => new Promise((r) => setTimeout(r, ms));
+    // Cada paso se encadena por tiempo (no por la promesa .finished, que algunas vistas previas no resuelven)
+    function animar(el, cuadros, op) {
+      try { el.animate(cuadros, op); } catch (e) {}
+      return espera(op.duration);
+    }
+    async function abrir() {
+      if (abriendo || terminado) return;
+      abriendo = true;
+      setTimeout(terminar, 3000); // seguro: pase lo que pase, el periódico queda abierto
+      try {
+        rollo.classList.remove('meciendo');
+        cubierta.classList.add('saliendo');
+        const vh = innerHeight, rh = rollo.offsetHeight, arriba = rh / 2 + 8, fin = vh + rh;
+        const hoja = document.querySelector('.hoja');
+        const ancho = Math.min((hoja ? hoja.getBoundingClientRect().width : innerWidth) + 20, innerWidth);
+        // a) Se suelta la liga
+        await animar(rollo.querySelector('.rollo-liga'),
+          [{ transform: 'none', opacity: 1 }, { transform: 'translateY(-70px) rotate(30deg) scaleY(.5)', opacity: 0 }],
+          { duration: 320, easing: 'cubic-bezier(.5,0,.75,0)', fill: 'forwards' });
+        // b) El rollo se endereza, sube al borde superior y se extiende al ancho de la hoja
+        await animar(rollo,
+          [{ top: '50%', width: rollo.offsetWidth + 'px', transform: 'translate(-50%, -50%) rotate(-10deg)' },
+           { top: arriba + 'px', width: ancho + 'px', transform: 'translate(-50%, -50%) rotate(0deg)' }],
+          { duration: 550, easing: 'cubic-bezier(.3,.7,.2,1)', fill: 'forwards' });
+        // c) Rueda hacia abajo desenrollando la página; el rollo adelgaza a medida que se acaba el papel
+        const ritmo = { duration: 1150, easing: 'cubic-bezier(.45,.05,.35,1)', fill: 'forwards' };
+        animar(rollo, [{ top: arriba + 'px', height: rh + 'px' }, { top: fin + 'px', height: rh * .5 + 'px' }], ritmo);
+        await animar(cubierta, [{ clipPath: 'inset(0px 0 0 0)' }, { clipPath: 'inset(' + fin + 'px 0 0 0)' }], ritmo);
+      } catch (e) {}
+      terminar();
+    }
+
+    // Primero se conectan los eventos; después, lo demás
+    cubierta.addEventListener('click', abrir);
+    rollo.addEventListener('click', abrir);
+    document.addEventListener('keydown', (e) => {
+      if (!terminado && ['Escape', 'Enter', ' '].includes(e.key)) { e.preventDefault(); abrir(); }
+    });
+
+    if (!raiz.classList.contains('js-anim') || typeof rollo.animate !== 'function') { terminar(); return; }
+    raiz.classList.add('cerrado');
+    try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; } catch (e) {}
+    try { scrollTo(0, 0); } catch (e) {}
+  })();
+</script>
+
+<!-- Aviso de prototipo -->
+<div class="bg-superficie text-tinta-suave text-sm px-4 py-2 text-center">
+  <strong class="text-tinta">Prototipo conceptual.</strong> Contenidos tomados de la Edición N.º 3,263 (domingo 11 de octubre de 2026).
+</div>
+
+<!-- ============ HOJA DE PERIÓDICO ============ -->
+<div class="hoja">
+
+<div class="folio folio-arriba px-4 md:px-0 pt-3 md:pt-0">
+  <span>Morelia, Michoacán</span>
+  <span class="num">Edición N.º 3,263 · Domingo 11 de octubre de 2026</span>
+  <span class="hidden sm:inline">Año LXXV · IV Época</span>
+</div>
+
+<!-- ============ HEADER ============ -->
+<header>
+  <!-- Cintillo teal: fecha, aniversario y redes -->
+  <div class="bg-teal text-sobre-carmesi">
+    <div class="max-w-6xl mx-auto px-4 py-2 flex flex-wrap items-center justify-between gap-x-4 gap-y-1 text-sm">
+      <p><span id="fecha-hoy" class="capitalize">Lunes 12 de octubre de 2026</span> · <span class="font-semibold">75 años de historia y formación</span></p>
+      <nav aria-label="Redes sociales" class="flex items-center gap-3">
+        <a href="https://www.facebook.com/comunidadxna" target="_blank" rel="noopener" class="hover:opacity-80" aria-label="Facebook">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M14 8h3V4h-3c-2.8 0-4.5 1.8-4.5 4.6V11H7v4h2.5v9h4v-9h3l.6-4h-3.6V8.9c0-.6.3-.9.9-.9z"/></svg>
+        </a>
+        <a href="#redes" class="hover:opacity-80" aria-label="Instagram">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>
+        </a>
+        <a href="#redes" class="hover:opacity-80" aria-label="TikTok">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.5 3c.4 2.3 1.9 3.8 4.2 4v3.3c-1.6 0-3-.5-4.2-1.3v6.4a5.6 5.6 0 1 1-5.6-5.6c.3 0 .6 0 .9.1v3.4a2.3 2.3 0 1 0 1.5 2.1V3h3.2z"/></svg>
+        </a>
+        <span class="w-px h-4 bg-sobre-carmesi opacity-40 mx-1"></span>
+        <a href="#edicion" class="font-semibold underline-offset-2 hover:underline">Suscríbete</a>
+      </nav>
+    </div>
+  </div>
+
+  <!-- Bloque carmesí: logotipo + menú -->
+  <div class="bg-carmesi text-sobre-carmesi">
+    <div class="max-w-6xl mx-auto px-4">
+      <div class="py-6 md:py-8 text-center">
+        <a href="#" class="inline-flex items-center gap-3 sm:gap-5">
+          <!-- Emblema oficial (75 aniversario · Año Jubilar), en blanco con fondo transparente -->
+          <img src="img/emblema-comunidad-cristiana.png" width="625" height="698" alt="" class="emblema h-16 sm:h-24 md:h-28 w-auto shrink-0">
+          <span class="flex flex-col items-start gap-2 text-left">
+            <span class="mancheta font-mancheta text-3xl sm:text-5xl md:text-6xl font-bold tracking-wide leading-none">COMUNIDAD CRISTIANA</span>
+            <span class="lema etiqueta opacity-90">Semanario de orientación católica · Arquidiócesis de Morelia</span>
+          </span>
+        </a>
+      </div>
+
+      <div class="flex items-center justify-between md:justify-center py-2 border-t border-white/30">
+        <button id="btn-menu" class="md:hidden etiqueta py-2" aria-expanded="false" aria-controls="menu">☰ Menú</button>
+        <nav id="menu" aria-label="Principal" class="hidden md:block w-full md:w-auto">
+          <ul class="flex flex-col md:flex-row md:items-center gap-1 md:gap-7 py-2 md:py-0 etiqueta">
+            <li><a class="block py-2 hover:opacity-75" href="#">Inicio</a></li>
+            <li><a class="block py-2 hover:opacity-75" href="#edicion">Edición semanal</a></li>
+            <li><a class="block py-2 hover:opacity-75" href="#extra">Al día</a></li>
+            <li><a class="block py-2 hover:opacity-75" href="#edicion">Columnas</a></li>
+            <li><a class="block py-2 hover:opacity-75" href="#edicion">Arquidiócesis</a></li>
+            <li><a class="block py-2 hover:opacity-75" href="#historia">Nuestra historia</a></li>
+            <li><a class="block py-2 hover:opacity-75" href="#pie">Contacto</a></li>
+          </ul>
+        </nav>
+        <a href="#" class="md:hidden etiqueta" aria-label="Buscar">Buscar</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cintillo de última hora (se desplaza solo; se detiene al pasar el cursor) -->
+  <div class="ticker border-b border-linea bg-papel" role="region" aria-label="Última hora">
+    <div class="max-w-6xl mx-auto px-4 flex items-stretch">
+      <p class="etiqueta bg-carmesi text-sobre-carmesi px-3 py-2 shrink-0 flex items-center gap-2"><span class="punto-vivo" aria-hidden="true"></span>Última hora</p>
+      <div class="ticker-ventana overflow-hidden flex-1 min-w-0 py-2 pl-4 font-lectura text-[0.95rem]">
+        <ul class="ticker-cinta">
+          <li><a href="https://www.facebook.com/comunidadxna/posts/1793228935722848" target="_blank" rel="noopener" class="titular-link">Más de 80 mil peregrinos de la Arquidiócesis llegan a la Basílica de Guadalupe</a></li>
+          <li><a href="contenidos/Edicion%203263.pdf#page=12" class="titular-link">El Hospital de Nuestra Señora de la Salud estrena cinco habitaciones</a></li>
+          <li><a href="contenidos/Edicion%203263.pdf#page=15" class="titular-link">Siete seminaristas reciben los ministerios de Lectorado y Acolitado</a></li>
+          <li><a href="contenidos/Edicion%203263.pdf#page=20" class="titular-link">XLI EDPAJ «La Gran Fiesta de los Jóvenes»: 14 de noviembre</a></li>
+          <li><a href="https://www.facebook.com/comunidadxna/posts/1791475015898240" target="_blank" rel="noopener" class="titular-link">Mes de las Misiones en San Jerónimo, Irámuco</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="max-w-6xl mx-auto px-4">
+
+  <!-- ============ NOTICIAS PRINCIPALES (CARRUSEL) ============ -->
+  <!-- Contenido: Edición N.º 3,263 (domingo 11 de octubre de 2026). Avanza solo cada 7 s; se detiene con el botón de pausa o al navegar con teclado. -->
+  <section id="destacadas" class="carrusel py-8 md:py-12 border-b border-linea" aria-roledescription="carrusel" aria-labelledby="principal">
+    <h1 id="principal" class="sr-only">Noticias principales</h1>
+    <div class="relative">
+    <div class="overflow-hidden">
+      <div class="carrusel-pista">
+
+        <article class="diapositiva grid md:grid-cols-12 gap-6 md:gap-10" role="group" aria-roledescription="diapositiva" aria-label="1 de 3">
+          <figure class="md:col-span-7 min-w-0">
+            <img src="img/edicion-3263/hospital-bendicion.jpg" width="805" height="520" alt="El Arzobispo José Armando Álvarez Cano bendice con agua bendita las nuevas áreas del Hospital de Nuestra Señora de la Salud" class="w-full max-w-full aspect-[3/2] object-cover rounded-sm bg-superficie">
+            <figcaption class="text-sm text-tinta-suave mt-2">Mons. José Armando Álvarez Cano bendice las nuevas habitaciones del HNSS, en Morelia, el viernes 2 de octubre de 2026.</figcaption>
+          </figure>
+          <div class="md:col-span-5 md:pr-8 flex flex-col justify-center gap-4 min-w-0">
+            <p class="etiqueta text-carmesi-texto">Noticia principal · Acontecer diocesano</p>
+            <h2 class="sin-barra font-lectura text-3xl md:text-[2.6rem] leading-tight font-bold">
+              <a href="contenidos/Edicion%203263.pdf#page=12" class="titular-link">Atención digna, segura y humana: el Hospital de Nuestra Señora de la Salud estrena cinco habitaciones</a>
+            </h2>
+            <p class="font-lectura text-lg text-tinta-suave">El HNSS amplió su capacidad de hospitalización con la inauguración y bendición de cinco nuevas habitaciones en el tercer piso. El Arzobispo recordó que la renovación no busca rentabilidad, sino mejores servicios para quienes más lo necesitan.</p>
+            <p class="text-sm text-tinta-suave">Por <strong class="text-tinta">Alberto Calderón Ramírez</strong> · <span class="num text-teal-texto font-semibold">Edición del 11 de octubre de 2026</span> · Págs. 12 y 13</p>
+            <div class="flex flex-wrap gap-3 pt-1">
+              <a href="contenidos/Edicion%203263.pdf#page=12" class="btn px-5 py-3 font-semibold rounded-sm">Leer nota completa</a>
+              <a href="https://www.facebook.com/comunidadxna" target="_blank" rel="noopener" class="px-5 py-3 font-semibold text-carmesi-texto border border-carmesi rounded-sm hover:bg-rosa-suave">Compartir</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="diapositiva grid md:grid-cols-12 gap-6 md:gap-10" role="group" aria-roledescription="diapositiva" aria-label="2 de 3">
+          <figure class="md:col-span-7 min-w-0">
+            <img src="img/edicion-3263/seminario-256.jpg" width="768" height="456" alt="Seminaristas forman una figura humana en el patio del Seminario Diocesano de Morelia" class="w-full max-w-full aspect-[3/2] object-cover rounded-sm bg-superficie">
+            <figcaption class="text-sm text-tinta-suave mt-2">Seminaristas en el patio del Seminario Diocesano de Morelia, en su 256 aniversario.</figcaption>
+          </figure>
+          <div class="md:col-span-5 md:pr-8 flex flex-col justify-center gap-4 min-w-0">
+            <p class="etiqueta text-carmesi-texto">Noticia principal · Seminario</p>
+            <h2 class="sin-barra font-lectura text-3xl md:text-[2.6rem] leading-tight font-bold">
+              <a href="contenidos/Edicion%203263.pdf#page=15" class="titular-link">El Seminario celebra 256 años de historia y formación</a>
+            </h2>
+            <p class="font-lectura text-lg text-tinta-suave">En el aniversario del Seminario Diocesano de Morelia, siete seminaristas recibieron los ministerios de Lectorado y Acolitado.</p>
+            <p class="text-sm text-tinta-suave"><span class="num text-teal-texto font-semibold">Edición del 11 de octubre de 2026</span> · Pág. 16</p>
+            <div class="flex flex-wrap gap-3 pt-1">
+              <a href="contenidos/Edicion%203263.pdf#page=15" class="btn px-5 py-3 font-semibold rounded-sm">Leer nota completa</a>
+              <a href="https://www.facebook.com/comunidadxna" target="_blank" rel="noopener" class="px-5 py-3 font-semibold text-carmesi-texto border border-carmesi rounded-sm hover:bg-rosa-suave">Compartir</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="diapositiva grid md:grid-cols-12 gap-6 md:gap-10" role="group" aria-roledescription="diapositiva" aria-label="3 de 3">
+          <figure class="md:col-span-7 min-w-0">
+            <img src="img/edicion-3263/san-miguel-uriangato.jpg" width="732" height="464" alt="Interior de la Parroquia de San Miguel Arcángel de Uriangato, adornado con cortinajes rojos y blancos, durante la Eucaristía de la fiesta patronal" class="w-full max-w-full aspect-[3/2] object-cover rounded-sm bg-superficie">
+            <figcaption class="text-sm text-tinta-suave mt-2">Fiesta patronal en la Parroquia de San Miguel Arcángel, en Uriangato, Gto.</figcaption>
+          </figure>
+          <div class="md:col-span-5 md:pr-8 flex flex-col justify-center gap-4 min-w-0">
+            <p class="etiqueta text-carmesi-texto">Noticia principal · Cobertura especial</p>
+            <h2 class="sin-barra font-lectura text-3xl md:text-[2.6rem] leading-tight font-bold">
+              <a href="contenidos/Edicion%203263.pdf#page=5" class="titular-link">«¿Quién como Dios?»: así celebró la Arquidiócesis a San Miguel Arcángel</a>
+            </h2>
+            <p class="font-lectura text-lg text-tinta-suave">Crónicas de las fiestas del 29 de septiembre en Uriangato, Jerécuaro, Curahuango, Morelia, Tarimoro, Eménguaro, Charo, Epejan y Tarímbaro.</p>
+            <p class="text-sm text-tinta-suave"><span class="num text-teal-texto font-semibold">Edición del 11 de octubre de 2026</span> · Págs. 5 a 9</p>
+            <div class="flex flex-wrap gap-3 pt-1">
+              <a href="contenidos/Edicion%203263.pdf#page=5" class="btn px-5 py-3 font-semibold rounded-sm">Leer cobertura</a>
+              <a href="https://www.facebook.com/comunidadxna" target="_blank" rel="noopener" class="px-5 py-3 font-semibold text-carmesi-texto border border-carmesi rounded-sm hover:bg-rosa-suave">Compartir</a>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </div>
+
+    <!-- Flechas a los lados de la nota -->
+    <button type="button" class="flecha flecha-izq" data-mover="-1" aria-label="Noticia anterior"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
+    <button type="button" class="flecha flecha-der" data-mover="1" aria-label="Noticia siguiente"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
+    </div>
+
+    <!-- Controles: índice con barra de avance y pausa -->
+    <div class="mt-6 flex items-end justify-between gap-4 border-t-2 border-[color:var(--tinta)] pt-3">
+      <div class="flex gap-4 sm:gap-6 min-w-0" role="group" aria-label="Elegir noticia">
+        <button type="button" class="punto" data-ir="0" aria-label="Noticia 1: Hospital"><span class="num">01</span><span class="hidden sm:inline"> Hospital</span><span class="barra" aria-hidden="true"></span></button>
+        <button type="button" class="punto" data-ir="1" aria-label="Noticia 2: Seminario"><span class="num">02</span><span class="hidden sm:inline"> Seminario</span><span class="barra" aria-hidden="true"></span></button>
+        <button type="button" class="punto" data-ir="2" aria-label="Noticia 3: San Miguel Arcángel"><span class="num">03</span><span class="hidden sm:inline"> San Miguel</span><span class="barra" aria-hidden="true"></span></button>
+      </div>
+      <div class="flex gap-2 shrink-0">
+        <button type="button" class="control" id="carrusel-pausa" aria-label="Pausar el carrusel">
+          <svg class="icono-pausa" width="14" height="14" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true"><rect x="2" y="1" width="3.5" height="12"/><rect x="8.5" y="1" width="3.5" height="12"/></svg>
+          <svg class="icono-play" width="14" height="14" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true"><path d="M3 1l10 6-10 6z"/></svg>
+        </button>
+      </div>
+    </div>
+  </section>
+  <script>
+    // ============ CARRUSEL DE NOTICIAS PRINCIPALES ============
+    // Script propio (independiente del resto de la página) y con temporizador de JavaScript:
+    // avanza solo cada 7 s aunque el navegador o la vista previa desactiven las animaciones CSS.
+    (function () {
+      const DURACION = 7000;
+      const car = document.getElementById('destacadas');
+      const pista = car.querySelector('.carrusel-pista');
+      const diapos = Array.from(car.querySelectorAll('.diapositiva'));
+      const puntos = Array.from(car.querySelectorAll('.punto'));
+      const btnPausa = document.getElementById('carrusel-pausa');
+      let actual = 0, transcurrido = 0, ultimo = Date.now(), pausaManual = false, pestanaOculta = false;
+
+      function ir(n) {
+        actual = (n + diapos.length) % diapos.length;
+        transcurrido = 0;
+        pista.style.transform = 'translateX(' + (-100 * actual) + '%)';
+        diapos.forEach((d, i) => {
+          const activa = i === actual;
+          d.setAttribute('aria-hidden', String(!activa));
+          try { d.inert = !activa; } catch (e) {} // los enlaces de las notas ocultas no reciben foco
+        });
+        puntos.forEach((p, i) => {
+          if (i === actual) p.setAttribute('aria-current', 'true'); else p.removeAttribute('aria-current');
+          p.querySelector('.barra').style.transform = 'scaleX(0)';
+        });
+      }
+      function pintarPausa() {
+        btnPausa.classList.toggle('en-pausa', pausaManual);
+        btnPausa.setAttribute('aria-label', pausaManual ? 'Reanudar el carrusel' : 'Pausar el carrusel');
+      }
+      // Reloj: suma el tiempo solo mientras corre; al llegar a 7 s pasa a la siguiente nota
+      function tic() {
+        const ahora = Date.now();
+        const corre = !pausaManual && !pestanaOculta && !document.documentElement.classList.contains('cerrado');
+        if (corre) transcurrido += Math.min(ahora - ultimo, 200);
+        ultimo = ahora;
+        if (transcurrido >= DURACION) ir(actual + 1);
+        puntos[actual].querySelector('.barra').style.transform = 'scaleX(' + Math.min(transcurrido / DURACION, 1) + ')';
+      }
+
+      puntos.forEach((p) => p.addEventListener('click', () => ir(Number(p.dataset.ir))));
+      car.querySelectorAll('[data-mover]').forEach((b) => b.addEventListener('click', () => ir(actual + Number(b.dataset.mover))));
+      btnPausa.addEventListener('click', () => { pausaManual = !pausaManual; pintarPausa(); });
+      document.addEventListener('visibilitychange', () => { pestanaOculta = document.visibilityState === 'hidden'; });
+      car.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') { e.preventDefault(); ir(actual + 1); }
+        if (e.key === 'ArrowLeft') { e.preventDefault(); ir(actual - 1); }
+      });
+      // Deslizar con el dedo en celulares
+      let x0 = null;
+      pista.addEventListener('pointerdown', (e) => { if (e.pointerType !== 'mouse') x0 = e.clientX; });
+      pista.addEventListener('pointerup', (e) => {
+        if (x0 === null) return;
+        const dx = e.clientX - x0; x0 = null;
+        if (Math.abs(dx) > 50) ir(actual + (dx < 0 ? 1 : -1));
+      });
+
+      ir(0);
+      pintarPausa();
+      setInterval(tic, 50);
+    })();
+  </script>
+
+  <!-- ============ EDICIÓN DE LA SEMANA ============ -->
+  <section id="edicion" aria-labelledby="t-edicion" class="py-10 md:py-14 border-b border-linea">
+    <div class="flex flex-wrap items-baseline justify-between gap-2 mb-8">
+      <h2 id="t-edicion" class="font-lectura text-2xl md:text-3xl font-bold">Edición de la semana</h2>
+      <a href="#" class="text-carmesi-texto font-semibold hover:underline">Ver ediciones anteriores →</a>
+    </div>
+
+    <div class="grid md:grid-cols-12 gap-8 md:gap-10">
+      <!-- Portada impresa -->
+      <aside class="md:col-span-4 min-w-0">
+        <div class="bg-superficie p-5 rounded-sm flex flex-col gap-4">
+          <a href="contenidos/Edicion%203263.pdf" class="block">
+            <img src="img/edicion-3263/portada.jpg" width="720" height="867" alt="Portada de la Edición 3,263: «Atención digna, segura y humana» y «256 años de historia y formación»" class="w-full max-w-full border border-linea shadow-sm bg-papel">
+          </a>
+          <div>
+            <p class="etiqueta text-teal-texto">Edición N.º 3,263 · Año LXXV · IV Época</p>
+            <p class="font-lectura font-semibold text-lg num">Domingo 11 de octubre de 2026</p>
+            <p class="text-sm text-tinta-suave">XXVIII Domingo del Tiempo Ordinario</p>
+          </div>
+          <div class="flex flex-col gap-2">
+            <a href="contenidos/Edicion%203263.pdf" download class="btn text-center px-4 py-3 font-semibold rounded-sm">Descargar edición PDF <span class="font-normal opacity-85">(12 MB)</span></a>
+            <a href="#articulos" class="text-center px-4 py-3 font-semibold text-carmesi-texto border border-carmesi rounded-sm bg-papel hover:bg-rosa-suave">Leer artículos en línea</a>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Artículos por sección -->
+      <div id="articulos" class="md:col-span-8 min-w-0 flex flex-col gap-8">
+        <article class="bg-rosa-suave p-5 rounded-sm">
+          <p class="etiqueta text-carmesi-texto mb-1">El Evangelio del domingo · Mt 22, 1-14</p>
+          <h3 class="font-lectura text-xl font-semibold"><a href="contenidos/Edicion%203263.pdf#page=3" class="titular-link">«¿Cómo has entrado aquí sin traje de fiesta?»: la parábola del banquete de bodas</a></h3>
+          <p class="font-lectura text-tinta-suave mt-2">La Voz del Pastor · <a href="contenidos/Edicion%203263.pdf#page=2" class="titular-link text-tinta">«Dios invita, pero no obliga»</a>, homilía de Mons. José Armando Álvarez Cano, Arzobispo de Morelia.</p>
+          <p class="text-sm text-tinta-suave mt-1">Págs. 2 y 3 · Homilía, lecturas y reflexión del P. J. Trinidad Lomelí Ochoa</p>
+        </article>
+
+        <div class="grid sm:grid-cols-2 gap-x-8 gap-y-7">
+          <article class="flex flex-col gap-1 min-w-0">
+            <p class="etiqueta text-carmesi-texto">Editorial</p>
+            <h3 class="font-lectura text-lg font-semibold leading-snug"><a href="contenidos/Edicion%203263.pdf#page=4" class="titular-link">¡Como me ves, te verás!</a></h3>
+            <p class="text-sm text-tinta-suave">Un llamado a cuidar a los abuelos, expuestos a accidentes, abusos y fraudes. Pág. 4</p>
+          </article>
+          <article class="flex flex-col gap-2 min-w-0 sm:row-span-2">
+            <img src="img/edicion-3263/seminario-256.jpg" width="768" height="456" alt="Seminaristas forman una figura humana en el patio del Seminario Diocesano de Morelia" class="w-full max-w-full aspect-[16/9] object-cover rounded-sm bg-superficie">
+            <p class="etiqueta text-carmesi-texto">Seminario</p>
+            <h3 class="font-lectura text-lg font-semibold leading-snug"><a href="contenidos/Edicion%203263.pdf#page=15" class="titular-link">El Seminario celebra 256 años de historia y formación</a></h3>
+            <p class="text-sm text-tinta-suave">Siete seminaristas reciben los ministerios de Lectorado y Acolitado. Pág. 16</p>
+          </article>
+          <article class="flex flex-col gap-1 min-w-0">
+            <p class="etiqueta text-carmesi-texto">Fiestas patronales</p>
+            <h3 class="font-lectura text-lg font-semibold leading-snug"><a href="contenidos/Edicion%203263.pdf#page=13" class="titular-link">San Francisco de Asís, a 800 años de su tránsito</a></h3>
+            <p class="text-sm text-tinta-suave">Fiestas en Acámbaro, Ihuatzio, Tzintzuntzan y Angamacutiro. Págs. 14 y 15</p>
+          </article>
+          <article class="flex flex-col gap-1 min-w-0">
+            <p class="etiqueta text-carmesi-texto">Fiestas patronales</p>
+            <h3 class="font-lectura text-lg font-semibold leading-snug"><a href="contenidos/Edicion%203263.pdf#page=10" class="titular-link">San Jerónimo, un apasionado de las Escrituras</a></h3>
+            <p class="text-sm text-tinta-suave">El Cardenal Alberto Suárez Inda preside la fiesta en Huandacareo; también se celebró en Irámuco. Pág. 10</p>
+          </article>
+          <article class="flex flex-col gap-1 min-w-0">
+            <p class="etiqueta text-carmesi-texto">Toma de posesión</p>
+            <h3 class="font-lectura text-lg font-semibold leading-snug"><a href="contenidos/Edicion%203263.pdf#page=11" class="titular-link">«Vengo a caminar para trabajar juntos en la fe»</a></h3>
+            <p class="text-sm text-tinta-suave">Fr. Daniel Martínez Vega, O.F.M., nuevo Párroco de Santiago Apóstol, en Coroneo, Gto. Pág. 11</p>
+          </article>
+        </div>
+
+        <div class="border-t border-linea pt-6">
+          <p class="etiqueta text-tinta-suave mb-4">Columnas de esta edición</p>
+          <ul class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            <li class="flex gap-3 items-start min-w-0">
+              <span class="w-11 h-11 shrink-0 rounded-full foto-teal flex items-center justify-center text-sm font-bold" style="color:#fff" aria-hidden="true">RH</span>
+              <div class="min-w-0"><p class="text-sm font-semibold">P. Rubén Hernández Colín</p><a href="contenidos/Edicion%203263.pdf#page=16" class="font-lectura text-[0.95rem] leading-snug titular-link">Pastoral diocesana: Mes de las Misiones</a></div>
+            </li>
+            <li class="flex gap-3 items-start min-w-0">
+              <span class="w-11 h-11 shrink-0 rounded-full foto-teal flex items-center justify-center text-sm font-bold" style="color:#fff" aria-hidden="true">MM</span>
+              <div class="min-w-0"><p class="text-sm font-semibold">P. Miguel Martínez Cruz</p><a href="contenidos/Edicion%203263.pdf#page=16" class="font-lectura text-[0.95rem] leading-snug titular-link">Catequesis: el catequista mistagogo (III)</a></div>
+            </li>
+            <li class="flex gap-3 items-start min-w-0">
+              <span class="w-11 h-11 shrink-0 rounded-full foto-teal flex items-center justify-center text-sm font-bold" style="color:#fff" aria-hidden="true">DT</span>
+              <div class="min-w-0"><p class="text-sm font-semibold">P. David Torres Ponce</p><a href="contenidos/Edicion%203263.pdf#page=17" class="font-lectura text-[0.95rem] leading-snug titular-link">Espacio Misión: apertura del Mes de las Misiones</a></div>
+            </li>
+            <li class="flex gap-3 items-start min-w-0">
+              <span class="w-11 h-11 shrink-0 rounded-full foto-teal flex items-center justify-center text-sm font-bold" style="color:#fff" aria-hidden="true">LO</span>
+              <div class="min-w-0"><p class="text-sm font-semibold">P. Lorenzo Orozco Mata</p><a href="contenidos/Edicion%203263.pdf#page=17" class="font-lectura text-[0.95rem] leading-snug titular-link">Música sacra: «Que habléis una sola cosa…»</a></div>
+            </li>
+            <li class="flex gap-3 items-start min-w-0">
+              <span class="w-11 h-11 shrink-0 rounded-full foto-teal flex items-center justify-center text-sm font-bold" style="color:#fff" aria-hidden="true">RB</span>
+              <div class="min-w-0"><p class="text-sm font-semibold">P. Rigoberto Beltrán Vargas y Perla Raquel García Pérez</p><a href="contenidos/Edicion%203263.pdf#page=18" class="font-lectura text-[0.95rem] leading-snug titular-link">Enfoques: 12 años después</a></div>
+            </li>
+            <li class="flex gap-3 items-start min-w-0">
+              <span class="w-11 h-11 shrink-0 rounded-full foto-teal flex items-center justify-center text-sm font-bold" style="color:#fff" aria-hidden="true">AA</span>
+              <div class="min-w-0"><p class="text-sm font-semibold">J. Armando Aburto Cedeño</p><a href="contenidos/Edicion%203263.pdf#page=18" class="font-lectura text-[0.95rem] leading-snug titular-link">Reflexiones de un laico: recta final del año</a></div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ MÁS ALLÁ DEL IMPRESO ============ -->
+  <section id="extra" aria-labelledby="t-extra" class="py-10 md:py-14 border-b border-linea">
+    <div class="flex flex-wrap items-end justify-between gap-3 mb-8">
+      <div>
+        <p class="etiqueta text-teal-texto mb-1">Solo en la web</p>
+        <h2 id="t-extra" class="font-lectura text-2xl md:text-3xl font-bold">Más allá del impreso</h2>
+        <p class="text-tinta-suave mt-1 max-w-2xl">Noticias al día, coberturas especiales y convocatorias de la semana.</p>
+      </div>
+      <div class="flex flex-wrap gap-2 text-sm" role="list" aria-label="Filtrar por tipo">
+        <span role="listitem" class="px-3 py-1 rounded-full bg-carmesi text-sobre-carmesi font-semibold">Todo</span>
+        <span role="listitem" class="px-3 py-1 rounded-full border border-linea">Al día</span>
+        <span role="listitem" class="px-3 py-1 rounded-full border border-linea">Nota extendida</span>
+        <span role="listitem" class="px-3 py-1 rounded-full border border-linea">Cobertura especial</span>
+      </div>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-8">
+      <article class="md:col-span-2 grid sm:grid-cols-2 gap-5 min-w-0">
+        <figure id="galeria" class="min-w-0">
+          <img src="img/edicion-3263/san-miguel-uriangato.jpg" width="732" height="464" alt="Interior de la Parroquia de San Miguel Arcángel de Uriangato, adornado con cortinajes rojos y blancos, durante la Eucaristía de la fiesta patronal" class="w-full max-w-full aspect-[4/3] object-cover rounded-sm bg-superficie">
+          <figcaption class="text-xs text-tinta-suave mt-1">Fiesta en Uriangato, Gto.</figcaption>
+        </figure>
+        <div class="flex flex-col gap-2 min-w-0">
+          <p class="etiqueta text-carmesi-texto">Cobertura especial</p>
+          <h3 class="font-lectura text-2xl font-semibold leading-snug"><a href="contenidos/Edicion%203263.pdf#page=5" class="titular-link">«¿Quién como Dios?»: así celebró la Arquidiócesis a San Miguel Arcángel</a></h3>
+          <p class="text-tinta-suave text-[0.95rem]">Crónicas de las fiestas del 29 de septiembre en Uriangato, Jerécuaro, Curahuango, Morelia, Tarimoro, Eménguaro, Charo, Epejan y Tarímbaro.</p>
+          <p class="text-sm text-teal-texto font-semibold num">Págs. 5 a 9</p>
+        </div>
+      </article>
+
+      <div class="min-w-0">
+        <p class="etiqueta text-tinta-suave mb-3">Al día</p>
+        <ol class="flex flex-col divide-y divide-[color:var(--linea)] border-y border-linea">
+          <li class="py-3 flex gap-4"><span class="num text-sm font-semibold text-teal-texto w-14 shrink-0">11 oct</span><a href="https://www.facebook.com/comunidadxna/posts/1793228935722848" target="_blank" rel="noopener" class="font-lectura leading-snug titular-link">Más de 80 mil peregrinos de la Arquidiócesis llegan a la Basílica de Guadalupe</a></li>
+          <li class="py-3 flex gap-4"><span class="num text-sm font-semibold text-teal-texto w-14 shrink-0">14 nov</span><a href="contenidos/Edicion%203263.pdf#page=20" class="font-lectura leading-snug titular-link">XLI EDPAJ «La Gran Fiesta de los Jóvenes»: de la Catedral al Estadio Francisco Villa, 8:30 h</a></li>
+          <li class="py-3 flex gap-4"><span class="num text-sm font-semibold text-teal-texto w-14 shrink-0">4 oct</span><a href="contenidos/Edicion%203263.pdf#page=15" class="font-lectura leading-snug titular-link">Siete seminaristas reciben los ministerios de Lectorado y Acolitado</a></li>
+          <li class="py-3 flex gap-4"><span class="num text-sm font-semibold text-teal-texto w-14 shrink-0">11 oct</span><a href="https://www.facebook.com/comunidadxna/posts/1791475015898240" target="_blank" rel="noopener" class="font-lectura leading-snug titular-link">Galería: Mes de las Misiones en la parroquia de San Jerónimo, Irámuco</a></li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ REDES SOCIALES ============ -->
+  <section id="redes" aria-labelledby="t-redes" class="py-10 md:py-14 border-b border-linea">
+    <h2 id="t-redes" class="font-lectura text-2xl md:text-3xl font-bold mb-2">Síguenos en redes</h2>
+    <p class="text-tinta-suave mb-6">Publicaciones recientes de nuestras cuentas oficiales. Todas usan el mismo perfil: isotipo blanco sobre fondo carmesí.</p>
+    <div class="grid md:grid-cols-12 gap-5">
+      <!-- Facebook: publicaciones en vivo con el Page Plugin oficial -->
+      <div class="md:col-span-7 border border-linea rounded-sm p-4 flex flex-col gap-3 min-w-0">
+        <div class="flex items-center justify-between gap-2">
+          <div class="flex items-center gap-2">
+            <span class="w-8 h-8 rounded-full bg-carmesi flex items-center justify-center shrink-0" aria-hidden="true"><svg width="12" height="16" viewBox="0 0 34 40"><rect x="15" width="4" height="40" fill="#fff"/><rect x="5" y="11" width="24" height="4" fill="#fff"/></svg></span>
+            <p class="etiqueta text-carmesi-texto">Facebook · @comunidadxna</p>
+          </div>
+          <a href="https://www.facebook.com/comunidadxna" target="_blank" rel="noopener" class="btn text-sm px-3 py-1.5 font-semibold rounded-sm">Seguir</a>
+        </div>
+        <!-- Cabecera de la página (portada, nombre, seguidores) -->
+        <div id="fb-pagina" class="w-full max-w-[500px] mx-auto min-h-[130px]"></div>
+        <!-- Publicaciones incrustadas: se llenan desde PUBLICACIONES_FACEBOOK (ver script al final) -->
+        <div id="fb-publicaciones" class="flex gap-3 overflow-x-auto snap-x snap-mandatory pb-2" tabindex="0" aria-label="Publicaciones recientes en Facebook (desliza para ver más)"></div>
+        <p class="text-sm">Transmisión de la misa dominical, avisos parroquiales y noticias de la semana.</p>
+        <a href="https://www.facebook.com/comunidadxna" target="_blank" rel="noopener" class="text-sm font-semibold text-carmesi-texto hover:underline">Ir a Facebook →</a>
+      </div>
+
+      <div class="md:col-span-5 grid sm:grid-cols-2 md:grid-cols-1 gap-5 content-start min-w-0">
+      <div class="border border-linea rounded-sm p-4 flex flex-col gap-3 min-w-0">
+        <div class="flex items-center gap-2">
+          <span class="w-8 h-8 rounded-full bg-carmesi flex items-center justify-center shrink-0" aria-hidden="true"><svg width="12" height="16" viewBox="0 0 34 40"><rect x="15" width="4" height="40" fill="#fff"/><rect x="5" y="11" width="24" height="4" fill="#fff"/></svg></span>
+          <p class="etiqueta text-carmesi-texto">Instagram</p>
+        </div>
+        <div class="grid grid-cols-3 gap-1">
+          <div class="foto aspect-square"></div><div class="foto-teal aspect-square"></div><div class="foto aspect-square"></div>
+          <div class="foto-teal aspect-square"></div><div class="foto aspect-square"></div><div class="foto-teal aspect-square"></div>
+        </div>
+        <p class="text-sm">Fotografía de la vida de la arquidiócesis.</p>
+        <a href="#" class="text-sm font-semibold text-carmesi-texto hover:underline">Ir a Instagram →</a>
+      </div>
+      <div class="border border-linea rounded-sm p-4 flex flex-col gap-3 min-w-0">
+        <div class="flex items-center gap-2">
+          <span class="w-8 h-8 rounded-full bg-carmesi flex items-center justify-center shrink-0" aria-hidden="true"><svg width="12" height="16" viewBox="0 0 34 40"><rect x="15" width="4" height="40" fill="#fff"/><rect x="5" y="11" width="24" height="4" fill="#fff"/></svg></span>
+          <p class="etiqueta text-carmesi-texto">TikTok</p>
+        </div>
+        <div class="flex gap-2">
+          <div class="foto-teal aspect-[9/16] flex-1 rounded-sm"></div><div class="foto aspect-[9/16] flex-1 rounded-sm"></div>
+        </div>
+        <p class="text-sm">El Evangelio en 60 segundos, para los más jóvenes.</p>
+        <a href="#" class="text-sm font-semibold text-carmesi-texto hover:underline">Ir a TikTok →</a>
+      </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ NUESTRA HISTORIA ============ -->
+  <section id="historia" aria-labelledby="t-historia" class="py-10 md:py-14 grid md:grid-cols-12 gap-8">
+    <div class="md:col-span-5 flex flex-col gap-4 min-w-0">
+      <p class="etiqueta text-teal-texto">Nuestra historia · Arquidiócesis de Morelia</p>
+      <h2 id="t-historia" class="font-lectura text-2xl md:text-3xl font-bold">75 años de historia y formación al servicio de la comunidad católica</h2>
+      <p class="font-lectura text-tinta-suave">Espacio para contar quiénes somos: el origen del semanario, sus directores, su labor formativa y su servicio a la arquidiócesis. Este texto se redactará con el archivo histórico del periódico.</p>
+      <div class="flex flex-wrap gap-3">
+        <a href="#" class="btn px-5 py-3 font-semibold rounded-sm">Conoce nuestra historia</a>
+        <a href="#" class="px-5 py-3 font-semibold text-carmesi-texto border border-carmesi rounded-sm hover:bg-rosa-suave">Hemeroteca</a>
+      </div>
+    </div>
+    <ol class="md:col-span-7 relative border-l-2 border-teal pl-6 flex flex-col gap-6 min-w-0">
+      <li><p class="etiqueta text-teal-texto num">[Año]</p><p class="font-lectura font-semibold">Fundación del semanario</p><p class="text-sm text-tinta-suave">Primer número y propósito original.</p></li>
+      <li><p class="etiqueta text-teal-texto num">[Año]</p><p class="font-lectura font-semibold">Consolidación como voz de la arquidiócesis</p><p class="text-sm text-tinta-suave">Hitos editoriales y coberturas memorables.</p></li>
+      <li><p class="etiqueta text-teal-texto num">[Año]</p><p class="font-lectura font-semibold">Edición número [1000]</p><p class="text-sm text-tinta-suave">Momentos clave de la publicación.</p></li>
+      <li><p class="etiqueta text-carmesi-texto num">2026</p><p class="font-lectura font-semibold">75 aniversario y nace el portal digital</p><p class="text-sm text-tinta-suave">El semanario se abre a nuevas generaciones.</p></li>
+    </ol>
+  </section>
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer id="pie" class="bg-carmesi text-sobre-carmesi mt-4">
+  <div class="max-w-6xl mx-auto px-4 py-12 grid sm:grid-cols-2 md:grid-cols-4 gap-8 text-[0.95rem]">
+    <div class="sm:col-span-2 md:col-span-1 flex flex-col gap-2">
+      <p class="font-mancheta text-2xl font-bold leading-tight">COMUNIDAD CRISTIANA</p>
+      <p class="opacity-90">Semanario de orientación católica de la Arquidiócesis de Morelia.</p>
+    </div>
+    <nav aria-label="Secciones" class="flex flex-col gap-1">
+      <p class="etiqueta opacity-80 mb-1">Secciones</p>
+      <a href="#edicion" class="hover:underline">Edición semanal</a>
+      <a href="#extra" class="hover:underline">Al día</a>
+      <a href="#edicion" class="hover:underline">Columnas</a>
+      <a href="#historia" class="hover:underline">Nuestra historia</a>
+      <a href="#" class="hover:underline">Hemeroteca PDF</a>
+    </nav>
+    <div class="flex flex-col gap-1">
+      <p class="etiqueta opacity-80 mb-1">Servicios</p>
+      <a href="#" class="hover:underline">Suscripción impresa</a>
+      <a href="#" class="hover:underline">Boletín por correo / WhatsApp</a>
+      <a href="#" class="hover:underline">Publicidad y avisos parroquiales</a>
+      <a href="#" class="hover:underline">Envía tu nota parroquial</a>
+    </div>
+    <div class="flex flex-col gap-1">
+      <p class="etiqueta opacity-80 mb-1">Contacto</p>
+      <p>[Dirección de la redacción], Morelia, Michoacán</p>
+      <p class="num">Tel. [000 000 0000]</p>
+      <p>[correo@comunidadcristiana.mx]</p>
+      <p class="opacity-90 text-sm">Lunes a viernes, 9:00 a 17:00 h</p>
+    </div>
+  </div>
+  <div class="bg-teal">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex flex-wrap justify-between gap-2 text-sm">
+      <p>© 2026 Comunidad Cristiana · 75 años de historia y formación</p>
+      <p><a href="#" class="hover:underline">Aviso de privacidad</a> · <a href="#" class="hover:underline">Directorio</a></p>
+    </div>
+  </div>
+</footer>
+
+<div class="folio folio-abajo px-4 md:px-0 pb-3 md:pb-0">
+  <span>Comunidad Cristiana</span>
+  <span class="num">Página 1</span>
+</div>
+
+</div><!-- /hoja -->
+
+<script>
+  // Fecha actual en español (México)
+  try {
+    const f = new Intl.DateTimeFormat('es-MX', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }).format(new Date());
+    document.getElementById('fecha-hoy').textContent = f;
+  } catch (e) {}
+  // Menú móvil
+  const btn = document.getElementById('btn-menu'), menu = document.getElementById('menu');
+  btn.addEventListener('click', () => {
+    const abierto = menu.classList.toggle('hidden') === false;
+    btn.setAttribute('aria-expanded', String(abierto));
+  });
+  // ============ ANIMACIONES ============
+  // Cintillo: se duplica la lista para que el desplazamiento sea un bucle continuo (la copia queda oculta a lectores de pantalla)
+  (function () {
+    const cinta = document.querySelector('.ticker-cinta');
+    Array.from(cinta.children).forEach((li) => {
+      const copia = li.cloneNode(true);
+      copia.setAttribute('aria-hidden', 'true');
+      copia.querySelectorAll('a').forEach((a) => a.tabIndex = -1);
+      cinta.appendChild(copia);
+    });
+  })();
+  // Notas que "se imprimen" al entrar en pantalla, en cascada
+  (function () {
+    if (!document.documentElement.classList.contains('js-anim')) return;
+    const piezas = document.querySelectorAll([
+      'main > section > figure', 'main > section > div:not(.grid)', 'main > section > h2', 'main > section > p',
+      '#edicion aside', '#articulos > article', '#articulos > .grid > article', '#articulos > div:last-child li',
+      '#extra .grid > article > *', '#extra .grid > div', '#redes .grid > div', '#historia li'
+    ].join(','));
+    piezas.forEach((el) => el.classList.add('revelar'));
+    if (!('IntersectionObserver' in window)) { piezas.forEach((el) => el.classList.add('visto')); return; }
+    const obs = new IntersectionObserver((entradas) => {
+      entradas.filter((e) => e.isIntersecting).forEach((e, i) => {
+        e.target.style.transitionDelay = (i * 90) + 'ms';
+        e.target.classList.add('visto');
+        obs.unobserve(e.target);
+      });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: .12 });
+    // Se empieza a observar cuando el periódico queda abierto, para que lo visible se imprima después
+    const observar = () => piezas.forEach((el) => obs.observe(el));
+    if (document.documentElement.classList.contains('abierto')) observar();
+    else document.addEventListener('periodico-abierto', observar, { once: true });
+  })();
+
+  // ============ FACEBOOK ============
+  // Facebook ya no muestra la línea de tiempo del Page Plugin a visitantes sin sesión,
+  // así que las publicaciones se incrustan una por una.
+  // Para actualizarlas: en Facebook, abre la publicación → "…" → "Copiar enlace" y pégalo aquí.
+  // Acepta publicaciones, fotos, videos y reels. Se muestran en este orden.
+  const PUBLICACIONES_FACEBOOK = [
+    'https://www.facebook.com/comunidadxna/posts/1793228935722848', // Peregrinación a la Basílica, 11 oct 2026
+    'https://www.facebook.com/comunidadxna/posts/1791475015898240', // Mes de las misiones, San Jerónimo, Iramuco
+    // 'https://www.facebook.com/comunidadxna/posts/...',
+    // 'https://www.facebook.com/comunidadxna/videos/...',
+    // 'https://www.facebook.com/reel/...',
+  ];
+  (function () {
+    const PAGINA = 'https://www.facebook.com/comunidadxna';
+    const cab = document.getElementById('fb-pagina'), lista = document.getElementById('fb-publicaciones');
+    const permisos = 'autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share';
+    function iframe(src, ancho, alto, titulo) {
+      const f = document.createElement('iframe');
+      f.src = src; f.width = ancho; f.height = alto; f.title = titulo;
+      f.style.cssText = 'border:none;overflow:hidden;display:block;margin:0 auto;max-width:100%';
+      f.setAttribute('scrolling', 'no'); f.setAttribute('allowfullscreen', 'true'); f.setAttribute('allow', permisos);
+      return f;
+    }
+    // Cabecera de la página: portada, nombre, seguidores y botón "Seguir página" (sin línea de tiempo)
+    let anchoCab = 0, espera;
+    function cargarCabecera() {
+      const ancho = Math.max(180, Math.min(500, Math.floor(cab.clientWidth)));
+      if (ancho === anchoCab) return;
+      anchoCab = ancho;
+      const p = new URLSearchParams({ href: PAGINA, tabs: '', width: ancho, height: 130, small_header: 'false',
+        adapt_container_width: 'true', hide_cover: 'false', show_facepile: 'false', locale: 'es_LA' });
+      cab.replaceChildren(iframe('https://www.facebook.com/plugins/page.php?' + p, ancho, 130, 'Página de Comunidad Cristiana en Facebook'));
+    }
+    cargarCabecera();
+    window.addEventListener('resize', () => { clearTimeout(espera); espera = setTimeout(cargarCabecera, 300); });
+
+    // Publicaciones incrustadas: carrusel horizontal de tarjetas de 350 px
+    // (el ancho mínimo con el que Facebook no recorta la publicación).
+    if (PUBLICACIONES_FACEBOOK.length) {
+      PUBLICACIONES_FACEBOOK.forEach((url) => {
+        const esVideo = /\/(videos|reel|watch)\b|fb\.watch/.test(url);
+        const p = new URLSearchParams({ href: url, show_text: 'true', width: 350, locale: 'es_LA' });
+        const caja = document.createElement('div');
+        caja.className = 'snap-start shrink-0 w-[350px] bg-papel border border-linea rounded-sm overflow-hidden';
+        caja.appendChild(iframe('https://www.facebook.com/plugins/' + (esVideo ? 'video' : 'post') + '.php?' + p,
+          350, 640, 'Publicación de Comunidad Cristiana en Facebook'));
+        lista.appendChild(caja);
+      });
+    } else {
+      // Sin enlaces configurados: tarjetas de muestra que llevan a la página
+      ['Misa dominical en vivo', 'Avisos parroquiales', 'Edición de la semana', 'Galería de la arquidiócesis'].forEach((t, i) => {
+        lista.insertAdjacentHTML('beforeend',
+          '<a href="' + PAGINA + '" target="_blank" rel="noopener" class="group block snap-start shrink-0 w-[260px] border border-linea rounded-sm overflow-hidden hover:border-carmesi">' +
+          '<div class="' + (i % 2 ? 'foto-teal' : 'foto') + ' aspect-video"></div>' +
+          '<div class="p-3"><p class="etiqueta text-teal-texto">Publicación de ejemplo</p>' +
+          '<p class="font-lectura font-semibold leading-snug group-hover:underline">' + t + '</p></div></a>');
+      });
+    }
+  })();
+</script>
+</body>
+</html>
