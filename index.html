@@ -181,6 +181,44 @@
   #carrusel-pausa .icono-play, #carrusel-pausa.en-pausa .icono-pausa { display: none; }
   #carrusel-pausa.en-pausa .icono-play { display: block; }
 
+  /* 6. Radio en vivo: banda de tono teal oscuro (fija en ambos temas), con carátula de sintonizador */
+  .radio { --radio-fondo: #233537; --radio-ambar: #F4B860; background: linear-gradient(150deg, #2F4446, var(--radio-fondo)); color: #fff; border-radius: 2px; padding: 1.25rem; }
+  @media (min-width: 768px) { .radio { padding: 1.5rem 1.75rem; } }
+  .radio h2 { color: #fff; }
+  .radio-logo { width: 5rem; height: 5rem; border-radius: 8px; object-fit: cover; flex-shrink: 0; box-shadow: 0 0 0 1px rgba(255,255,255,.25); }
+  .radio-play { width: 4rem; height: 4rem; flex-shrink: 0; display: grid; place-items: center; border-radius: 50%; background: var(--carmesi); color: #fff; transition: background .2s, transform .2s; }
+  .radio-play:hover { background: var(--carmesi-hover); transform: scale(1.05); }
+  .radio a:focus-visible, .radio button:focus-visible, .radio input:focus-visible, .mini-radio:focus-visible { outline-color: #fff; }
+  .radio-play .i-pausa, .radio-play .i-carga, .radio[data-estado="vivo"] .i-play, .radio[data-estado="cargando"] .i-play { display: none; }
+  .radio[data-estado="vivo"] .i-pausa, .radio[data-estado="cargando"] .i-carga { display: block; }
+  .i-carga { width: 1.6rem; height: 1.6rem; border-radius: 50%; border: 3px solid rgba(255,255,255,.35); border-top-color: #fff; animation: giro .9s linear infinite; }
+  @keyframes giro { to { transform: rotate(360deg); } }
+  /* Barras de ecualizador: solo se mueven con audio sonando */
+  .radio-eq { display: inline-flex; align-items: flex-end; gap: 2px; height: .85rem; }
+  .radio-eq i { width: 3px; height: 30%; background: currentColor; }
+  .radio[data-estado="vivo"] .radio-eq i { animation: eq 1s ease-in-out infinite alternate; }
+  .radio-eq i:nth-child(2) { animation-delay: -.35s !important; }
+  .radio-eq i:nth-child(3) { animation-delay: -.7s !important; }
+  @keyframes eq { from { height: 25%; } to { height: 100%; } }
+  .radio[data-estado="vivo"] .radio-estado { color: var(--radio-ambar); }
+  .radio-volumen { width: 7rem; accent-color: var(--radio-ambar); }
+  /* Sintonizador: marcas de frecuencia de 88 a 108 FM, con la aguja en 98.1 */
+  .radio-dial { position: relative; height: 3.25rem; margin-top: 1.25rem; border-top: 1px solid rgba(255,255,255,.25); }
+  .radio-marcas { position: absolute; inset: 0 0 auto 0; height: .8rem;
+    background-image: repeating-linear-gradient(90deg, rgba(255,255,255,.7) 0 1px, transparent 1px 25%), repeating-linear-gradient(90deg, rgba(255,255,255,.3) 0 1px, transparent 1px 5%); }
+  .radio-marcas-fin { position: absolute; top: 0; right: 0; width: 1px; height: .8rem; background: rgba(255,255,255,.7); }
+  .radio-mhz { position: absolute; top: 1rem; transform: translateX(-50%); font-size: .75rem; font-weight: 600; color: rgba(255,255,255,.8); }
+  .radio-aguja { position: absolute; left: 50.5%; top: -.35rem; height: 1.45rem; width: 3px; margin-left: -1px; background: var(--radio-ambar); border-radius: 2px; transition: box-shadow .4s; }
+  .radio[data-estado="vivo"] .radio-aguja { box-shadow: 0 0 10px 2px var(--radio-ambar); }
+  .radio-sintonia { position: absolute; left: 50.5%; top: 1rem; transform: translateX(-50%); padding: 0 .35rem; background: #293C3E; color: var(--radio-ambar); font-size: .8rem; font-weight: 700; white-space: nowrap; }
+  .radio-enlace { color: #fff; text-decoration: underline; text-underline-offset: 2px; }
+  .radio-enlace:hover { color: var(--radio-ambar); }
+  /* Control flotante: aparece solo si la radio suena y el módulo quedó fuera de la pantalla */
+  .mini-radio { position: fixed; z-index: 50; right: 1rem; bottom: 1rem; display: flex; align-items: center; gap: .6rem; padding: .6rem 1rem .6rem .75rem; border-radius: 999px;
+    background: #233537; color: #fff; font-family: var(--font-ui); font-size: .9rem; font-weight: 600; box-shadow: 0 8px 24px -6px rgba(0,0,0,.5); }
+  .mini-radio:hover { background: #2F4446; }
+  .mini-radio[hidden] { display: none; }
+
   @media (prefers-reduced-motion: reduce) {
     * { transition: none !important; }
     *, *::before, *::after { animation: none !important; }
@@ -333,10 +371,11 @@
       <div class="flex items-center justify-between md:justify-center py-2 border-t border-white/30">
         <button id="btn-menu" class="md:hidden etiqueta py-2" aria-expanded="false" aria-controls="menu">☰ Menú</button>
         <nav id="menu" aria-label="Principal" class="hidden md:block w-full md:w-auto">
-          <ul class="flex flex-col md:flex-row md:items-center gap-1 md:gap-7 py-2 md:py-0 etiqueta">
+          <ul class="flex flex-col md:flex-row md:flex-wrap md:items-center md:justify-center md:whitespace-nowrap gap-1 md:gap-x-4 lg:gap-x-7 py-2 md:py-0 etiqueta">
             <li><a class="block py-2 hover:opacity-75" href="#">Inicio</a></li>
             <li><a class="block py-2 hover:opacity-75" href="#edicion">Edición semanal</a></li>
             <li><a class="block py-2 hover:opacity-75" href="#extra">Al día</a></li>
+            <li><a class="block py-2 hover:opacity-75" href="#radio">Radio</a></li>
             <li><a class="block py-2 hover:opacity-75" href="#edicion">Columnas</a></li>
             <li><a class="block py-2 hover:opacity-75" href="#edicion">Arquidiócesis</a></li>
             <li><a class="block py-2 hover:opacity-75" href="#historia">Nuestra historia</a></li>
@@ -518,6 +557,50 @@
       setInterval(tic, 50);
     })();
   </script>
+
+  <!-- ============ RADIO EN VIVO ============ -->
+  <!-- Reproductor propio de Uve Radio 98.1 FM. El script está al final de la página (busca "RADIO EN VIVO"). -->
+  <section id="radio" aria-labelledby="t-radio" class="py-8 md:py-10 border-b border-linea scroll-mt-4">
+    <div class="radio" data-estado="detenida">
+      <div class="flex flex-col md:flex-row md:items-center gap-5 md:gap-8">
+        <div class="flex items-center gap-4 min-w-0 md:flex-1">
+          <img src="img/radio/logo-uve-radio.png" width="256" height="256" alt="Logotipo de Uve Radio" class="radio-logo">
+          <div class="min-w-0">
+            <p class="etiqueta" style="color:var(--radio-ambar)">Radio en vivo</p>
+            <h2 id="t-radio" class="sin-barra font-lectura text-2xl md:text-3xl font-bold leading-tight">Uve Radio 98.1 FM</h2>
+            <p class="text-sm opacity-90">«El sonido de tus ideas» · Universidad Vasco de Quiroga, Morelia</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-4 shrink-0">
+          <button type="button" id="radio-play" class="radio-play" aria-label="Escuchar Uve Radio en vivo">
+            <svg class="i-play" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4l14 8-14 8z"/></svg>
+            <svg class="i-pausa" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="5" y="4" width="5" height="16"/><rect x="14" y="4" width="5" height="16"/></svg>
+            <span class="i-carga" aria-hidden="true"></span>
+          </button>
+          <div class="flex flex-col gap-1.5">
+            <p class="radio-estado etiqueta flex items-center gap-2" role="status"><span class="radio-eq" aria-hidden="true"><i></i><i></i><i></i></span><span id="radio-estado">Toca para escuchar</span></p>
+            <label class="flex items-center gap-2 text-sm"><span class="sr-only">Volumen</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 9v6h4l6 5V4L7 9zm13 3a4 4 0 0 0-2-3.5v7a4 4 0 0 0 2-3.5z"/></svg>
+              <input type="range" id="radio-volumen" class="radio-volumen" min="0" max="1" step="0.05" value="0.8">
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="radio-dial" aria-hidden="true">
+        <span class="radio-marcas"></span><span class="radio-marcas-fin"></span>
+        <span class="radio-mhz num" style="left:0;transform:none">88</span>
+        <span class="radio-mhz num" style="left:25%">93</span>
+        <span class="radio-mhz num" style="left:75%">103</span>
+        <span class="radio-mhz num" style="left:100%;transform:translateX(-100%)">108</span>
+        <span class="radio-aguja"></span>
+        <span class="radio-sintonia num">98.1 FM</span>
+      </div>
+
+      <p id="radio-ayuda" class="text-sm opacity-90">¿Prefieres otra opción? <a class="radio-enlace" href="https://www.uveradio.com.mx/" target="_blank" rel="noopener">Sitio oficial</a> · <a class="radio-enlace" href="https://tunein.com/radio/Uve-Radio-981-s353715/" target="_blank" rel="noopener">TuneIn</a></p>
+      <audio id="radio-audio" preload="none"></audio>
+    </div>
+  </section>
 
   <!-- ============ EDICIÓN DE LA SEMANA ============ -->
   <section id="edicion" aria-labelledby="t-edicion" class="py-10 md:py-14 border-b border-linea">
@@ -876,6 +959,97 @@
           '<div class="p-3"><p class="etiqueta text-teal-texto">Publicación de ejemplo</p>' +
           '<p class="font-lectura font-semibold leading-snug group-hover:underline">' + t + '</p></div></a>');
       });
+    }
+  })();
+</script>
+
+<!-- Control flotante de la radio (fuera de .hoja para que quede fijo a la ventana) -->
+<button type="button" id="mini-radio" class="mini-radio" aria-label="Detener Uve Radio" hidden>
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="5" y="4" width="5" height="16"/><rect x="14" y="4" width="5" height="16"/></svg>
+  Uve Radio 98.1
+</button>
+<script>
+  // ============ RADIO EN VIVO ============
+  // Usa la dirección estable de la emisora, NO el enlace largo con "?zt=...": ese lleva un token que caduca
+  // a los 60 segundos. Esta dirección redirige cada vez a un enlace recién firmado.
+  // Script propio: si falla, el resto de la página sigue funcionando.
+  (function () {
+    const STREAM = 'https://stream.zeno.fm/dlznshb6vkeuv';
+    const MAX_REINTENTOS = 3;
+    const caja = document.querySelector('.radio');
+    const audio = document.getElementById('radio-audio');
+    const btn = document.getElementById('radio-play');
+    const mini = document.getElementById('mini-radio');
+    const textoEstado = document.getElementById('radio-estado');
+    const volumen = document.getElementById('radio-volumen');
+    let quiereSonar = false, reintentos = 0, temporizador, moduloVisible = true;
+
+    function pintar(estado, texto) {
+      caja.dataset.estado = estado;
+      textoEstado.textContent = texto;
+      btn.setAttribute('aria-label', quiereSonar ? 'Detener Uve Radio' : 'Escuchar Uve Radio en vivo');
+      pintarMini();
+    }
+    function pintarMini() { mini.hidden = !(quiereSonar && !moduloVisible); }
+
+    function conectar() {
+      audio.src = STREAM; // cada conexión pide un enlace nuevo
+      const intento = audio.play();
+      // Los fallos de red llegan por el evento "error"; aquí solo importa si el navegador bloqueó el audio
+      if (intento) intento.catch((e) => { if (e.name === 'NotAllowedError') detener(); });
+    }
+    function escuchar() {
+      quiereSonar = true; reintentos = 0;
+      pintar('cargando', 'Conectando…');
+      conectar();
+    }
+    function detener(texto) {
+      quiereSonar = false;
+      clearTimeout(temporizador);
+      // En una transmisión en vivo se corta la conexión: así no gasta datos y, al volver, suena lo actual
+      audio.pause();
+      audio.removeAttribute('src');
+      audio.load();
+      pintar('detenida', texto || 'Toca para escuchar');
+    }
+    function fallo() {
+      if (!quiereSonar) return;
+      if (reintentos++ < MAX_REINTENTOS) {
+        pintar('cargando', 'Reconectando…');
+        clearTimeout(temporizador);
+        temporizador = setTimeout(conectar, 1500 * reintentos);
+      } else {
+        detener('Sin señal. Intenta más tarde');
+      }
+    }
+
+    btn.addEventListener('click', () => { quiereSonar ? detener() : escuchar(); });
+    mini.addEventListener('click', () => detener());
+    audio.addEventListener('playing', () => { reintentos = 0; pintar('vivo', 'En vivo'); });
+    audio.addEventListener('waiting', () => { if (quiereSonar) pintar('cargando', 'Cargando…'); });
+    audio.addEventListener('error', () => { if (audio.getAttribute('src')) fallo(); });
+    audio.addEventListener('ended', fallo); // el servidor cerró la conexión
+    // Pausa desde fuera de la página (auriculares, pantalla de bloqueo)
+    audio.addEventListener('pause', () => { if (quiereSonar && !audio.ended && !audio.error) detener(); });
+
+    // Volumen recordado por visitante
+    try { const v = localStorage.getItem('radio-volumen'); if (v !== null) volumen.value = v; } catch (e) {}
+    audio.volume = Number(volumen.value);
+    volumen.addEventListener('input', () => {
+      audio.volume = Number(volumen.value);
+      try { localStorage.setItem('radio-volumen', volumen.value); } catch (e) {}
+    });
+
+    // Controles en la pantalla de bloqueo del celular
+    if ('mediaSession' in navigator) {
+      navigator.mediaSession.metadata = new MediaMetadata({ title: 'Uve Radio 98.1 FM', artist: 'En vivo desde Morelia',
+        artwork: [{ src: new URL('img/radio/logo-uve-radio.png', location.href).href, sizes: '256x256', type: 'image/png' }] });
+      navigator.mediaSession.setActionHandler('play', escuchar);
+      navigator.mediaSession.setActionHandler('pause', () => detener());
+    }
+
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver((e) => { moduloVisible = e[e.length - 1].isIntersecting; pintarMini(); }).observe(caja);
     }
   })();
 </script>
