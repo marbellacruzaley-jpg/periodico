@@ -228,7 +228,16 @@
   .chat-panel[hidden], .chat-boton[hidden] { display: none; }
   .chat-cabeza { display: flex; align-items: center; gap: .65rem; padding: .6rem .6rem .6rem 1rem; background: var(--carmesi); color: #fff; }
   .chat-cerrar { width: 2.75rem; height: 2.75rem; flex-shrink: 0; margin-left: auto; display: grid; place-items: center; border-radius: 50%; color: #fff; }
+  .chat-cerrar + .chat-cerrar { margin-left: 0; }
   .chat-cerrar:hover { background: rgba(255,255,255,.18); }
+  /* Contraído: solo queda la barra de título, y la conversación se conserva */
+  .chat-panel.contraido { width: min(21rem, calc(100vw - 2rem)); height: auto; }
+  .chat-panel.contraido :is(.chat-log, .chat-form, .chat-nota, .chat-subtitulo) { display: none; }
+  .chat-panel.contraido .chat-cabeza { cursor: pointer; }
+  #chat-contraer svg { transition: transform .2s; }
+  .chat-panel.contraido #chat-contraer svg { transform: rotate(180deg); }
+  /* En celular la barra ocupa casi todo el ancho: el control de la radio sube para no quedar debajo */
+  @media (max-width: 640px) { .chat-contraido .mini-radio { bottom: 5.75rem; } }
   .chat-cerrar:focus-visible { outline-color: #fff; outline-offset: -3px; }
   .chat-log { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; display: flex; flex-direction: column; gap: .7rem; padding: 1rem; }
   .chat-msg { max-width: 92%; font-size: .95rem; line-height: 1.45; overflow-wrap: anywhere; }
@@ -1097,8 +1106,11 @@
     <img src="img/emblema-comunidad-cristiana.png" width="625" height="698" alt="" class="h-9 w-auto shrink-0">
     <div class="min-w-0">
       <p id="chat-titulo" class="font-semibold leading-tight">Pregúntale al periódico</p>
-      <p class="text-xs opacity-90">Comunidad Cristiana · Edición N.º 3,263</p>
+      <p class="chat-subtitulo text-xs opacity-90">Comunidad Cristiana · Edición N.º 3,263</p>
     </div>
+    <button type="button" id="chat-contraer" class="chat-cerrar" aria-expanded="true" aria-label="Contraer el chat">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 9l7 7 7-7"/></svg>
+    </button>
     <button type="button" id="chat-cerrar" class="chat-cerrar" aria-label="Cerrar el chat">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"/></svg>
     </button>
@@ -1288,8 +1300,29 @@
       // La respuesta se muestra desde su inicio, aunque sea más larga que la ventana
       log.scrollTop = burbuja.offsetTop - log.offsetTop - 8;
     }
+    const btnContraer = document.getElementById('chat-contraer');
+    function contraer(si) {
+      panel.classList.toggle('contraido', si);
+      document.documentElement.classList.toggle('chat-contraido', si);
+      btnContraer.setAttribute('aria-expanded', String(!si));
+      btnContraer.setAttribute('aria-label', si ? 'Expandir el chat' : 'Contraer el chat');
+    }
+    btnContraer.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const si = !panel.classList.contains('contraido');
+      contraer(si);
+      if (!si && matchMedia('(pointer: fine)').matches) entrada.focus();
+    });
+    // Contraído, toda la barra sirve para volver a expandirlo
+    panel.querySelector('.chat-cabeza').addEventListener('click', (e) => {
+      if (panel.classList.contains('contraido') && !e.target.closest('button')) {
+        contraer(false);
+        if (matchMedia('(pointer: fine)').matches) entrada.focus();
+      }
+    });
     function abrir() {
       panel.hidden = false; boton.hidden = true; boton.setAttribute('aria-expanded', 'true');
+      contraer(false);
       if (!iniciado) {
         iniciado = true;
         agregar('chat-bot', 'Hola, soy el chat de <strong>Comunidad Cristiana</strong>. Pregúntame sobre esta edición y te muestro lo que dice y en qué página.', true);
@@ -1300,6 +1333,7 @@
       if (matchMedia('(pointer: fine)').matches) entrada.focus(); else document.getElementById('chat-cerrar').focus();
     }
     function cerrar() {
+      contraer(false);
       panel.hidden = true; boton.hidden = false; boton.setAttribute('aria-expanded', 'false');
       boton.focus();
     }
