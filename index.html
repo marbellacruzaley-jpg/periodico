@@ -214,10 +214,43 @@
   .radio-enlace { color: #fff; text-decoration: underline; text-underline-offset: 2px; }
   .radio-enlace:hover { color: var(--radio-ambar); }
   /* Control flotante: aparece solo si la radio suena y el módulo quedó fuera de la pantalla */
-  .mini-radio { position: fixed; z-index: 50; right: 1rem; bottom: 1rem; display: flex; align-items: center; gap: .6rem; padding: .6rem 1rem .6rem .75rem; border-radius: 999px;
+  .mini-radio { position: fixed; z-index: 50; left: 1rem; bottom: 1rem; display: flex; align-items: center; gap: .6rem; padding: .6rem 1rem .6rem .75rem; border-radius: 999px;
     background: #233537; color: #fff; font-family: var(--font-ui); font-size: .9rem; font-weight: 600; box-shadow: 0 8px 24px -6px rgba(0,0,0,.5); }
   .mini-radio:hover { background: #2F4446; }
   .mini-radio[hidden] { display: none; }
+
+  /* 7. Chat del periódico: responde citando la edición, como un recorte de prensa con su número de página */
+  .chat-boton { position: fixed; z-index: 55; right: 1rem; bottom: 1rem; display: flex; align-items: center; gap: .5rem; min-height: 3rem; padding: .6rem 1.1rem .6rem .9rem; border-radius: 999px;
+    background: var(--carmesi); color: #fff; font-family: var(--font-ui); font-weight: 700; box-shadow: 0 8px 24px -6px rgba(0,0,0,.5); transition: background .2s; }
+  .chat-boton:hover { background: var(--carmesi-hover); }
+  .chat-panel { position: fixed; z-index: 55; right: 1rem; bottom: 1rem; width: min(25rem, calc(100vw - 2rem)); height: min(38rem, calc(100vh - 2rem)); height: min(38rem, calc(100dvh - 2rem));
+    display: flex; flex-direction: column; background: var(--papel); color: var(--tinta); border: 1px solid var(--linea); border-radius: 8px; overflow: hidden; box-shadow: 0 18px 44px -10px rgba(0,0,0,.55); }
+  .chat-panel[hidden], .chat-boton[hidden] { display: none; }
+  .chat-cabeza { display: flex; align-items: center; gap: .65rem; padding: .6rem .6rem .6rem 1rem; background: var(--carmesi); color: #fff; }
+  .chat-cerrar { width: 2.75rem; height: 2.75rem; flex-shrink: 0; margin-left: auto; display: grid; place-items: center; border-radius: 50%; color: #fff; }
+  .chat-cerrar:hover { background: rgba(255,255,255,.18); }
+  .chat-cerrar:focus-visible { outline-color: #fff; outline-offset: -3px; }
+  .chat-log { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; display: flex; flex-direction: column; gap: .7rem; padding: 1rem; }
+  .chat-msg { max-width: 92%; font-size: .95rem; line-height: 1.45; overflow-wrap: anywhere; }
+  .chat-yo { align-self: flex-end; max-width: 85%; padding: .5rem .8rem; border-radius: 10px 10px 2px 10px; background: var(--carmesi); color: #fff; }
+  .chat-bot { align-self: flex-start; }
+  .chat-bot a { color: var(--carmesi-texto); font-weight: 600; text-decoration: underline; text-underline-offset: 2px; }
+  .chat-bot ul { margin-top: .35rem; }
+  .chat-bot li { padding: .2rem 0; }
+  .chat-recorte { margin: .4rem 0; padding: .1rem 0 .1rem .8rem; border-left: 3px solid var(--carmesi); font-family: var(--font-lectura); }
+  .chat-recorte mark { background: var(--rosa-suave); color: inherit; padding: 0 .1em; }
+  .chat-fuente { color: var(--teal-texto); }
+  .chat-tambien { margin-top: .35rem; font-size: .85rem; color: var(--tinta-suave); }
+  .chat-chips { display: flex; flex-wrap: wrap; gap: .4rem; }
+  .chat-chip { min-height: 2.25rem; padding: .3rem .75rem; border: 1px solid var(--carmesi-texto); border-radius: 999px; color: var(--carmesi-texto); font-size: .875rem; font-weight: 600; background: var(--papel); }
+  .chat-chip:hover { background: var(--rosa-suave); }
+  .chat-form { display: flex; gap: .4rem; padding: .6rem; border-top: 1px solid var(--linea); }
+  .chat-form input { flex: 1; min-width: 0; padding: .5rem .7rem; border: 1px solid var(--tinta-suave); border-radius: 4px; background: var(--papel); color: var(--tinta); font-size: 16px; }
+  .chat-form input:focus-visible { outline: 2px solid var(--teal-texto); outline-offset: 1px; }
+  .chat-form button { padding: .5rem .9rem; border-radius: 4px; font-weight: 600; }
+  .chat-nota { padding: 0 .75rem .55rem; font-size: .75rem; line-height: 1.3; color: var(--tinta-suave); }
+  /* En celular el botón queda solo con el icono, para no tapar el control de la radio */
+  @media (max-width: 640px) { .chat-boton-texto { display: none; } .chat-boton { padding: .75rem; } }
 
   @media (prefers-reduced-motion: reduce) {
     * { transition: none !important; }
@@ -1051,6 +1084,235 @@
     if ('IntersectionObserver' in window) {
       new IntersectionObserver((e) => { moduloVisible = e[e.length - 1].isIntersecting; pintarMini(); }).observe(caja);
     }
+  })();
+</script>
+
+<!-- ============ CHAT DEL PERIÓDICO ============ -->
+<button type="button" id="chat-boton" class="chat-boton" aria-label="Pregúntale al periódico" aria-expanded="false" aria-controls="chat-panel">
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4 3h16a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H9l-5 4v-4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/></svg>
+  <span class="chat-boton-texto">Pregúntale al periódico</span>
+</button>
+<div id="chat-panel" class="chat-panel" role="dialog" aria-labelledby="chat-titulo" hidden>
+  <div class="chat-cabeza">
+    <img src="img/emblema-comunidad-cristiana.png" width="625" height="698" alt="" class="h-9 w-auto shrink-0">
+    <div class="min-w-0">
+      <p id="chat-titulo" class="font-semibold leading-tight">Pregúntale al periódico</p>
+      <p class="text-xs opacity-90">Comunidad Cristiana · Edición N.º 3,263</p>
+    </div>
+    <button type="button" id="chat-cerrar" class="chat-cerrar" aria-label="Cerrar el chat">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"/></svg>
+    </button>
+  </div>
+  <div id="chat-log" class="chat-log" role="log" aria-live="polite" tabindex="0" aria-label="Conversación"></div>
+  <form id="chat-form" class="chat-form">
+    <label for="chat-texto" class="sr-only">Escribe tu pregunta sobre el periódico</label>
+    <input id="chat-texto" type="text" maxlength="200" autocomplete="off" placeholder="¿Qué quieres saber de esta edición?">
+    <button type="submit" class="btn">Enviar</button>
+  </form>
+  <p class="chat-nota">Busco en el texto de la edición y cito lo que encuentro. Soy automático y puedo equivocarme de pasaje. Lo que escribes no se guarda ni se envía.</p>
+</div>
+<script>
+  // ============ CHAT DEL PERIÓDICO ============
+  // Busca en el texto de la edición (contenidos/edicion-chat.js) y responde con citas textuales.
+  // Funciona solo en el navegador: sin servidor, sin IA y sin enviar datos.
+  // CADA EDICIÓN NUEVA: regenera el índice con herramientas/indexar-edicion.js, actualiza SUMARIO
+  // y el número de edición en la cabecera del chat.
+  (function () {
+    const SUMARIO = [ // [título, página impresa, hoja del PDF]
+      ['La Voz del Pastor: «Dios invita, pero no obliga»', 2, 2], ['El Evangelio del domingo (Mt 22, 1-14)', 3, 3], ['Editorial: «¡Como me ves, te verás!»', 4, 4],
+      ['Fiestas de San Miguel Arcángel', '5 a 9', 5], ['San Jerónimo, en Huandacareo e Irámuco', 10, 10], ['Toma de posesión en Coroneo, Gto.', 11, 11],
+      ['Hospital de Nuestra Señora de la Salud', '12 y 13', 12], ['San Francisco de Asís', '14 y 15', 13], ['Seminario: 256 años', 16, 15],
+      ['Pastoral y opinión', '17 a 19', 16], ['Avisos y pasatiempos', 20, 19], ['Cíber Comunidad', 22, 21]
+    ];
+    const INICIO = [['¿Qué trae esta edición?', 'sumario'], ['El Evangelio del domingo', 'evangelio banquete de bodas'], ['Editorial', 'editorial como me ves te veras'], ['Hospital', 'hospital nuevas habitaciones'], ['Seminario', 'seminario 256 años ministerios'], ['¿Quién dirige el periódico?', 'director']];
+    const NO_BUSCAR = new Set(('a al algo alguien ante aqui asi ay cada como con cual cuales cuando cuanto cuanta cuantos cuantas de del dice dicen donde dame dijo el ella ellos en entre era es esa ese eso esta estan estas este esto estos fue habla hablan hablar hay hizo la las le les lo los mas me mi mis muy nos o para pero periodico por porque puedes puedo que quien quienes quiero saber se segun sea ser si sobre son su sus te tiene tienen tu un una uno unos unas y ya yo edicion articulo nota noticia dime cuentame informacion').split(' '));
+
+    const normalizar = (t) => t.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+    // Reduce cada palabra a su raíz, para que «fundó», «fundada» y «fundación» coincidan
+    function raiz(w) {
+      if (w.length <= 3) return w;
+      const s = w.length > 4 && w.endsWith('es') ? w.slice(0, -2) : w.endsWith('s') ? w.slice(0, -1) : w;
+      const m = s.match(/^(.{3,}?)(acion|amiento|imiento|ando|iendo|aron|ieron|ada|ado|ida|ido|aba|ar|er|ir|a|e|o)$/);
+      return m ? m[1] : s;
+    }
+    const palabras = (t) => normalizar(t).match(/[a-zñ0-9]+/g) || [];
+    const raices = (t) => palabras(t).filter((w) => !NO_BUSCAR.has(w)).map(raiz);
+    const escapar = (t) => t.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+    let datos = null, indice = null;
+    // El índice se descarga solo cuando alguien abre el chat
+    let cargando = null;
+    function cargar() {
+      if (cargando) return cargando;
+      cargando = new Promise((ok, mal) => {
+        const s = document.createElement('script');
+        s.src = 'contenidos/edicion-chat.js';
+        s.onload = () => { datos = window.EDICION_CHAT; preparar(); ok(); };
+        s.onerror = () => { cargando = null; mal(new Error('sin índice')); };
+        document.head.appendChild(s);
+      });
+      return cargando;
+    }
+    function preparar() {
+      const df = new Map();
+      const docs = datos.pasajes.map((d) => {
+        const tf = new Map();
+        raices(d.h + ' ' + (d.k || '')).forEach((w) => tf.set(w, (tf.get(w) || 0) + 3)); // los títulos pesan más que el cuerpo
+        raices(d.t).forEach((w) => tf.set(w, (tf.get(w) || 0) + 1));
+        let largo = 0; tf.forEach((n, w) => { df.set(w, (df.get(w) || 0) + 1); largo += n; });
+        return { d, tf, largo, plano: palabras(d.h + ' ' + d.t).join(' ') };
+      });
+      const media = docs.reduce((a, x) => a + x.largo, 0) / docs.length;
+      indice = { docs, df, media, vocab: [...df.keys()], N: docs.length };
+    }
+    function distanciaUno(a, b) { // ¿difieren en una sola letra? (faltas de ortografía)
+      if (Math.abs(a.length - b.length) > 1 || a === b) return false;
+      let i = 0; while (i < a.length && a[i] === b[i]) i++;
+      if (a.length === b.length) return a.slice(i + 1) === b.slice(i + 1);
+      return a.length > b.length ? a.slice(i + 1) === b.slice(i) : a.slice(i) === b.slice(i + 1);
+    }
+    const corregir = (w) => (indice.df.has(w) || w.length < 5 ? w : indice.vocab.find((v) => distanciaUno(w, v)) || w);
+    const idf = (w) => Math.log(1 + (indice.N + .5) / ((indice.df.get(w) || 0) + .5));
+
+    function buscar(pregunta) {
+      const terminos = [...new Set(raices(pregunta).map(corregir))];
+      if (!terminos.length) return { terminos, hallados: [] };
+      // Una palabra que no aparece en la edición cuenta menos: «¿cuántas habitaciones estrenó el hospital?»
+      // debe encontrar la nota aunque el texto no diga «estrenó»
+      const pesoTotal = terminos.reduce((a, w) => a + idf(w) * (indice.df.has(w) ? 1 : .5), 0);
+      const frase = palabras(pregunta).filter((w) => !NO_BUSCAR.has(w)).join(' ');
+      const hallados = [];
+      indice.docs.forEach((x) => {
+        let s = 0, cubierto = 0;
+        terminos.forEach((w) => {
+          const n = x.tf.get(w);
+          if (!n) return;
+          cubierto += idf(w);
+          s += idf(w) * (n * 2.2) / (n + 1.2 * (.5 + .5 * x.largo / indice.media));
+        });
+        // Debe aparecer la mayor parte de lo importante de la pregunta; si no, es mejor decir que no se encontró
+        const cobertura = cubierto / pesoTotal;
+        if (cobertura < .6) return;
+        s *= cobertura * cobertura; // gana el pasaje que contiene toda la pregunta, no el que repite parte de ella
+        if (terminos.length > 1 && x.plano.includes(frase)) s *= 1.5;
+        hallados.push({ d: x.d, s });
+      });
+      hallados.sort((a, b) => b.s - a.s);
+      return { terminos, hallados };
+    }
+    // Recorta el pasaje a las oraciones que mejor responden, sin cortar ninguna a la mitad
+    function extracto(texto, terminos) {
+      const oraciones = texto.match(/[^.!?]+[.!?»”"]*\s*/g) || [texto];
+      const valor = oraciones.map((o) => { const r = new Set(raices(o)); return terminos.filter((w) => r.has(w)).length; });
+      const largos = oraciones.map((o) => o.split(/\s+/).length);
+      let mejor = 0, mejorValor = -1;
+      for (let i = 0; i < oraciones.length; i++) {
+        let v = 0, n = 0;
+        for (let j = i; j < oraciones.length && n + largos[j] <= 70; j++) { v += valor[j]; n += largos[j]; }
+        if (v > mejorValor) { mejorValor = v; mejor = i; }
+      }
+      let fin = mejor, n = 0;
+      while (fin < oraciones.length && (n === 0 || n + largos[fin] <= 70)) { n += largos[fin]; fin++; }
+      return (mejor > 0 ? '… ' : '') + oraciones.slice(mejor, fin).join('').trim() + (fin < oraciones.length ? ' …' : '');
+    }
+    function resaltar(texto, terminos) {
+      return escapar(texto).replace(/[\p{L}\p{N}]+/gu, (w) => (terminos.includes(raiz(normalizar(w))) ? '<mark>' + w + '</mark>' : w));
+    }
+    const enlacePDF = (hoja, texto) => '<a href="' + datos.pdf + '#page=' + hoja + '" target="_blank" rel="noopener">' + texto + '</a>';
+
+    const CRISIS = ['suicid', 'quitarme la vida', 'quiero morir', 'quisiera morir', 'no quiero vivir', 'matarme', 'hacerme dano', 'me golpean', 'me abusan', 'abusan de mi', 'me violaron', 'me quieren matar'];
+    function responder(pregunta) {
+      const n = palabras(pregunta).join(' ');
+      if (CRISIS.some((c) => n.includes(c))) return { html: 'Lamento que estés pasando por esto. Soy un chat automático del periódico y no puedo darte el apoyo que mereces, pero hay personas que sí pueden hacerlo ahora mismo:<br><br><strong>Línea de la Vida: <a href="tel:8009112000">800 911 2000</a></strong><br>Gratuita y confidencial, las 24 horas.<br><br>Si estás en peligro inmediato, llama al <strong><a href="tel:911">911</a></strong>.' };
+      if (n === 'sumario' || /\b(que trae|que hay|que viene|de que (trata|habla)|resumen|sumario|indice|temas|secciones|contenido)\b/.test(n)) {
+        return { html: 'La edición N.º ' + escapar(datos.numero) + ', del ' + escapar(datos.fecha) + ', trae:<ul>' + SUMARIO.map((s) => '<li>' + enlacePDF(s[2], s[0]) + ' <span class="chat-fuente num">· pág. ' + s[1] + '</span></li>').join('') + '</ul>' };
+      }
+      const breve = n.split(' ').length <= 4;
+      if (breve && /\b(hola|buenas|buenos|saludos)\b/.test(n)) return { html: '¡Hola! Pregúntame sobre lo que publica esta edición: notas, columnas, personas o lugares.', chips: INICIO };
+      if (breve && /\b(gracias|bendiciones)\b/.test(n)) return { html: '¡Con gusto! Que tengas un buen día.' };
+      // Director, domicilio y teléfono salen del directorio impreso de la propia edición
+      if (/\b(director|dirige|directorio|domicilio|direccion|telefono|contacto|contactar|redaccion|oficina|oficinas)\b/.test(n)) {
+        const dir = datos.pasajes.find((d) => d.t.includes('Domicilio de la Publicación'));
+        if (dir) {
+          const datosDir = dir.t.split('•').map((s) => s.trim()).filter((s) => /^(Director|Domicilio|Tel)/.test(s));
+          if (datosDir.length) return { html: 'Según el directorio de la edición:<div class="chat-recorte">' + datosDir.map(escapar).join('<br>') + '</div>' + enlacePDF(dir.p, 'Leer en el PDF, pág. ' + dir.i) };
+        }
+      }
+      const r = buscar(pregunta);
+      if (r.hallados.length) {
+        const m = r.hallados[0], paginas = new Set([m.d.i]), otros = [];
+        for (const h of r.hallados.slice(1)) {
+          if (otros.length === 2 || h.s < m.s * .5) break;
+          if (!paginas.has(h.d.i)) { paginas.add(h.d.i); otros.push(enlacePDF(h.d.p, 'pág. ' + h.d.i)); }
+        }
+        return { html: 'Esto dice la edición:' +
+          '<div class="chat-recorte">' + resaltar(extracto(m.d.t, r.terminos), r.terminos) + '</div>' +
+          (m.d.h ? '<p class="chat-tambien"><strong>' + escapar(m.d.h) + '</strong></p>' : '') +
+          enlacePDF(m.d.p, 'Leer en el PDF, pág. ' + m.d.i) +
+          (otros.length ? '<p class="chat-tambien">También aparece en ' + otros.join(' y ') + '.</p>' : '') };
+      }
+      return { html: 'No encontré eso en la edición N.º ' + escapar(datos.numero) + ', que es la única que conozco por ahora. Prueba con otras palabras, como el nombre de una persona, un lugar o una sección.', chips: INICIO };
+    }
+
+    const boton = document.getElementById('chat-boton'), panel = document.getElementById('chat-panel');
+    const log = document.getElementById('chat-log'), form = document.getElementById('chat-form'), entrada = document.getElementById('chat-texto');
+    let iniciado = false;
+    function agregar(clase, contenido, comoHTML) {
+      const d = document.createElement('div');
+      d.className = 'chat-msg ' + clase;
+      if (comoHTML) d.innerHTML = contenido; else d.textContent = contenido; // lo que escribe el lector nunca se trata como HTML
+      log.appendChild(d);
+      return d;
+    }
+    function ponerChips(lista) {
+      log.querySelectorAll('.chat-chips').forEach((c) => c.remove());
+      if (!lista) return;
+      const c = document.createElement('div');
+      c.className = 'chat-chips';
+      lista.forEach(([texto, consulta]) => {
+        const b = document.createElement('button');
+        b.type = 'button'; b.className = 'chat-chip'; b.textContent = texto;
+        b.addEventListener('click', () => preguntar(texto, consulta));
+        c.appendChild(b);
+      });
+      log.appendChild(c);
+    }
+    async function preguntar(visible, consulta) {
+      agregar('chat-yo', visible);
+      ponerChips(null);
+      let res;
+      try { await cargar(); res = responder(consulta); }
+      catch (e) { res = { html: 'No pude abrir la edición. Revisa tu conexión e inténtalo de nuevo.' }; }
+      const burbuja = agregar('chat-bot', res.html, true);
+      ponerChips(res.chips);
+      // La respuesta se muestra desde su inicio, aunque sea más larga que la ventana
+      log.scrollTop = burbuja.offsetTop - log.offsetTop - 8;
+    }
+    function abrir() {
+      panel.hidden = false; boton.hidden = true; boton.setAttribute('aria-expanded', 'true');
+      if (!iniciado) {
+        iniciado = true;
+        agregar('chat-bot', 'Hola, soy el chat de <strong>Comunidad Cristiana</strong>. Pregúntame sobre esta edición y te muestro lo que dice y en qué página.', true);
+        ponerChips(INICIO);
+        cargar().catch(() => {});
+      }
+      // En pantallas táctiles no se enfoca el texto, para que el teclado no tape la conversación
+      if (matchMedia('(pointer: fine)').matches) entrada.focus(); else document.getElementById('chat-cerrar').focus();
+    }
+    function cerrar() {
+      panel.hidden = true; boton.hidden = false; boton.setAttribute('aria-expanded', 'false');
+      boton.focus();
+    }
+    boton.addEventListener('click', abrir);
+    document.getElementById('chat-cerrar').addEventListener('click', cerrar);
+    panel.addEventListener('keydown', (e) => { if (e.key === 'Escape') cerrar(); });
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const t = entrada.value.trim();
+      if (!t) return;
+      entrada.value = '';
+      preguntar(t, t);
+    });
   })();
 </script>
 </body>
