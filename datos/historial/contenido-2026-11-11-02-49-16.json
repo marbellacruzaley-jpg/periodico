@@ -1,0 +1,502 @@
+{
+  "general": {
+    "tituloPagina": "Comunidad Cristiana Web",
+    "descripcion": "Portal del semanario católico Comunidad Cristiana, Arquidiócesis de Morelia.",
+    "mancheta": "COMUNIDAD CRISTIANA",
+    "lema": "Semanario de orientación católica · Arquidiócesis de Morelia",
+    "emblema": "img/emblema-comunidad-cristiana.png",
+    "ciudad": "Morelia, Michoacán",
+    "numeroEdicion": "3,263",
+    "fechaEdicion": "Domingo 11 de octubre de 2026",
+    "epoca": "Año LXXV · IV Época",
+    "aniversario": "75 años de historia y formación",
+    "pdfEdicion": "contenidos/Edicion%203263.pdf",
+    "facebook": "https://www.facebook.com/comunidadxna",
+    "instagram": "#redes",
+    "tiktok": "#redes",
+    "enlaceSuscribete": "#edicion",
+    "mostrarEntrada": true,
+    "aviso": {
+      "visible": true,
+      "texto": "**Prototipo conceptual.** Contenidos tomados de la Edición N.º 3,263 (domingo 11 de octubre de 2026)."
+    }
+  },
+  "menu": [
+    {
+      "texto": "Inicio",
+      "enlace": "#"
+    },
+    {
+      "texto": "Edición semanal",
+      "enlace": "#edicion"
+    },
+    {
+      "texto": "Al día",
+      "enlace": "#extra"
+    },
+    {
+      "texto": "Radio",
+      "enlace": "#radio"
+    },
+    {
+      "texto": "Columnas",
+      "enlace": "#edicion"
+    },
+    {
+      "texto": "Arquidiócesis",
+      "enlace": "#edicion"
+    },
+    {
+      "texto": "Nuestra historia",
+      "enlace": "#historia"
+    },
+    {
+      "texto": "Contacto",
+      "enlace": "#pie"
+    }
+  ],
+  "ultimaHora": {
+    "visible": true,
+    "titulo": "Última hora",
+    "notas": [
+      {
+        "texto": "Más de 80 mil peregrinos de la Arquidiócesis llegan a la Basílica de Guadalupe",
+        "enlace": "https://www.facebook.com/comunidadxna/posts/1793228935722848"
+      },
+      {
+        "texto": "El Hospital de Nuestra Señora de la Salud estrena cinco habitaciones",
+        "enlace": "contenidos/Edicion%203263.pdf#page=12"
+      },
+      {
+        "texto": "Siete seminaristas reciben los ministerios de Lectorado y Acolitado",
+        "enlace": "contenidos/Edicion%203263.pdf#page=15"
+      },
+      {
+        "texto": "XLI EDPAJ «La Gran Fiesta de los Jóvenes»: 14 de noviembre",
+        "enlace": "contenidos/Edicion%203263.pdf#page=20"
+      },
+      {
+        "texto": "Mes de las Misiones en San Jerónimo, Irámuco",
+        "enlace": "https://www.facebook.com/comunidadxna/posts/1791475015898240"
+      }
+    ]
+  },
+  "destacadas": {
+    "visible": true,
+    "notas": [
+      {
+        "nombreCorto": "Hospital",
+        "imagen": "img/edicion-3263/hospital-bendicion.jpg",
+        "alt": "El Arzobispo José Armando Álvarez Cano bendice con agua bendita las nuevas áreas del Hospital de Nuestra Señora de la Salud",
+        "pie": "Mons. José Armando Álvarez Cano bendice las nuevas habitaciones del HNSS, en Morelia, el viernes 2 de octubre de 2026.",
+        "etiqueta": "Noticia principal · Acontecer diocesano",
+        "titulo": "Atención digna, segura y humana: el Hospital de Nuestra Señora de la Salud estrena cinco habitaciones",
+        "resumen": "El HNSS amplió su capacidad de hospitalización con la inauguración y bendición de cinco nuevas habitaciones en el tercer piso. El Arzobispo recordó que la renovación no busca rentabilidad, sino mejores servicios para quienes más lo necesitan.",
+        "autor": "Alberto Calderón Ramírez",
+        "fecha": "Edición del 11 de octubre de 2026",
+        "paginas": "Págs. 12 y 13",
+        "enlace": "contenidos/Edicion%203263.pdf#page=12",
+        "textoBoton": "Leer nota completa"
+      },
+      {
+        "nombreCorto": "Seminario",
+        "imagen": "img/edicion-3263/seminario-256.jpg",
+        "alt": "Seminaristas forman una figura humana en el patio del Seminario Diocesano de Morelia",
+        "pie": "Seminaristas en el patio del Seminario Diocesano de Morelia, en su 256 aniversario.",
+        "etiqueta": "Noticia principal · Seminario",
+        "titulo": "El Seminario celebra 256 años de historia y formación",
+        "resumen": "En el aniversario del Seminario Diocesano de Morelia, siete seminaristas recibieron los ministerios de Lectorado y Acolitado.",
+        "autor": "",
+        "fecha": "Edición del 11 de octubre de 2026",
+        "paginas": "Pág. 16",
+        "enlace": "contenidos/Edicion%203263.pdf#page=15",
+        "textoBoton": "Leer nota completa"
+      },
+      {
+        "nombreCorto": "San Miguel",
+        "imagen": "img/edicion-3263/san-miguel-uriangato.jpg",
+        "alt": "Interior de la Parroquia de San Miguel Arcángel de Uriangato, adornado con cortinajes rojos y blancos, durante la Eucaristía de la fiesta patronal",
+        "pie": "Fiesta patronal en la Parroquia de San Miguel Arcángel, en Uriangato, Gto.",
+        "etiqueta": "Noticia principal · Cobertura especial",
+        "titulo": "«¿Quién como Dios?»: así celebró la Arquidiócesis a San Miguel Arcángel",
+        "resumen": "Crónicas de las fiestas del 29 de septiembre en Uriangato, Jerécuaro, Curahuango, Morelia, Tarimoro, Eménguaro, Charo, Epejan y Tarímbaro.",
+        "autor": "",
+        "fecha": "Edición del 11 de octubre de 2026",
+        "paginas": "Págs. 5 a 9",
+        "enlace": "contenidos/Edicion%203263.pdf#page=5",
+        "textoBoton": "Leer cobertura"
+      }
+    ]
+  },
+  "radio": {
+    "visible": true,
+    "etiqueta": "Radio en vivo",
+    "nombre": "Uve Radio 98.1 FM",
+    "nombreCorto": "Uve Radio 98.1",
+    "descripcion": "«El sonido de tus ideas» · Universidad Vasco de Quiroga, Morelia",
+    "logo": "img/radio/logo-uve-radio.png",
+    "frecuencia": "98.1",
+    "stream": "https://stream.zeno.fm/dlznshb6vkeuv",
+    "sitioOficial": "https://www.uveradio.com.mx/",
+    "tunein": "https://tunein.com/radio/Uve-Radio-981-s353715/"
+  },
+  "edicion": {
+    "visible": true,
+    "titulo": "Edición de la semana",
+    "enlaceAnteriores": "#",
+    "portada": "img/edicion-3263/portada.jpg",
+    "altPortada": "Portada de la Edición 3,263: «Atención digna, segura y humana» y «256 años de historia y formación»",
+    "liturgia": "XXVIII Domingo del Tiempo Ordinario",
+    "pesoPdf": "12 MB",
+    "evangelio": {
+      "visible": true,
+      "etiqueta": "El Evangelio del domingo · Mt 22, 1-14",
+      "titulo": "«¿Cómo has entrado aquí sin traje de fiesta?»: la parábola del banquete de bodas",
+      "enlace": "contenidos/Edicion%203263.pdf#page=3",
+      "texto": "La Voz del Pastor · [«Dios invita, pero no obliga»](contenidos/Edicion%203263.pdf#page=2), homilía de Mons. José Armando Álvarez Cano, Arzobispo de Morelia.",
+      "nota": "Págs. 2 y 3 · Homilía, lecturas y reflexión del P. J. Trinidad Lomelí Ochoa"
+    },
+    "articulos": [
+      {
+        "etiqueta": "Editorial",
+        "titulo": "¡Como me ves, te verás!",
+        "enlace": "contenidos/Edicion%203263.pdf#page=4",
+        "resumen": "Un llamado a cuidar a los abuelos, expuestos a accidentes, abusos y fraudes. Pág. 4",
+        "imagen": "",
+        "alt": ""
+      },
+      {
+        "etiqueta": "Seminario",
+        "titulo": "El Seminario celebra 256 años de historia y formación",
+        "enlace": "contenidos/Edicion%203263.pdf#page=15",
+        "resumen": "Siete seminaristas reciben los ministerios de Lectorado y Acolitado. Pág. 16",
+        "imagen": "img/edicion-3263/seminario-256.jpg",
+        "alt": "Seminaristas forman una figura humana en el patio del Seminario Diocesano de Morelia"
+      },
+      {
+        "etiqueta": "Fiestas patronales",
+        "titulo": "San Francisco de Asís, a 800 años de su tránsito",
+        "enlace": "contenidos/Edicion%203263.pdf#page=13",
+        "resumen": "Fiestas en Acámbaro, Ihuatzio, Tzintzuntzan y Angamacutiro. Págs. 14 y 15",
+        "imagen": "",
+        "alt": ""
+      },
+      {
+        "etiqueta": "Fiestas patronales",
+        "titulo": "San Jerónimo, un apasionado de las Escrituras",
+        "enlace": "contenidos/Edicion%203263.pdf#page=10",
+        "resumen": "El Cardenal Alberto Suárez Inda preside la fiesta en Huandacareo; también se celebró en Irámuco. Pág. 10",
+        "imagen": "",
+        "alt": ""
+      },
+      {
+        "etiqueta": "Toma de posesión",
+        "titulo": "«Vengo a caminar para trabajar juntos en la fe»",
+        "enlace": "contenidos/Edicion%203263.pdf#page=11",
+        "resumen": "Fr. Daniel Martínez Vega, O.F.M., nuevo Párroco de Santiago Apóstol, en Coroneo, Gto. Pág. 11",
+        "imagen": "",
+        "alt": ""
+      }
+    ],
+    "tituloColumnas": "Columnas de esta edición",
+    "columnas": [
+      {
+        "autor": "P. Rubén Hernández Colín",
+        "titulo": "Pastoral diocesana: Mes de las Misiones",
+        "enlace": "contenidos/Edicion%203263.pdf#page=16"
+      },
+      {
+        "autor": "P. Miguel Martínez Cruz",
+        "titulo": "Catequesis: el catequista mistagogo (III)",
+        "enlace": "contenidos/Edicion%203263.pdf#page=16"
+      },
+      {
+        "autor": "P. David Torres Ponce",
+        "titulo": "Espacio Misión: apertura del Mes de las Misiones",
+        "enlace": "contenidos/Edicion%203263.pdf#page=17"
+      },
+      {
+        "autor": "P. Lorenzo Orozco Mata",
+        "titulo": "Música sacra: «Que habléis una sola cosa…»",
+        "enlace": "contenidos/Edicion%203263.pdf#page=17"
+      },
+      {
+        "autor": "P. Rigoberto Beltrán Vargas y Perla Raquel García Pérez",
+        "titulo": "Enfoques: 12 años después",
+        "enlace": "contenidos/Edicion%203263.pdf#page=18"
+      },
+      {
+        "autor": "J. Armando Aburto Cedeño",
+        "titulo": "Reflexiones de un laico: recta final del año",
+        "enlace": "contenidos/Edicion%203263.pdf#page=18"
+      }
+    ]
+  },
+  "extra": {
+    "visible": true,
+    "etiqueta": "Solo en la web",
+    "titulo": "Más allá del impreso",
+    "subtitulo": "Noticias al día, coberturas especiales y convocatorias de la semana.",
+    "filtros": [
+      {
+        "texto": "Todo"
+      },
+      {
+        "texto": "Al día"
+      },
+      {
+        "texto": "Nota extendida"
+      },
+      {
+        "texto": "Cobertura especial"
+      }
+    ],
+    "cobertura": {
+      "imagen": "img/edicion-3263/san-miguel-uriangato.jpg",
+      "alt": "Interior de la Parroquia de San Miguel Arcángel de Uriangato, adornado con cortinajes rojos y blancos, durante la Eucaristía de la fiesta patronal",
+      "pie": "Fiesta en Uriangato, Gto.",
+      "etiqueta": "Cobertura especial",
+      "titulo": "«¿Quién como Dios?»: así celebró la Arquidiócesis a San Miguel Arcángel",
+      "enlace": "contenidos/Edicion%203263.pdf#page=5",
+      "resumen": "Crónicas de las fiestas del 29 de septiembre en Uriangato, Jerécuaro, Curahuango, Morelia, Tarimoro, Eménguaro, Charo, Epejan y Tarímbaro.",
+      "paginas": "Págs. 5 a 9"
+    },
+    "tituloAlDia": "Al día",
+    "alDia": [
+      {
+        "fecha": "11 oct",
+        "texto": "Más de 80 mil peregrinos de la Arquidiócesis llegan a la Basílica de Guadalupe",
+        "enlace": "https://www.facebook.com/comunidadxna/posts/1793228935722848"
+      },
+      {
+        "fecha": "14 nov",
+        "texto": "XLI EDPAJ «La Gran Fiesta de los Jóvenes»: de la Catedral al Estadio Francisco Villa, 8:30 h",
+        "enlace": "contenidos/Edicion%203263.pdf#page=20"
+      },
+      {
+        "fecha": "4 oct",
+        "texto": "Siete seminaristas reciben los ministerios de Lectorado y Acolitado",
+        "enlace": "contenidos/Edicion%203263.pdf#page=15"
+      },
+      {
+        "fecha": "11 oct",
+        "texto": "Galería: Mes de las Misiones en la parroquia de San Jerónimo, Irámuco",
+        "enlace": "https://www.facebook.com/comunidadxna/posts/1791475015898240"
+      }
+    ]
+  },
+  "redes": {
+    "visible": true,
+    "titulo": "Síguenos en redes",
+    "texto": "Publicaciones recientes de nuestras cuentas oficiales. Todas usan el mismo perfil: isotipo blanco sobre fondo carmesí.",
+    "facebook": {
+      "usuario": "@comunidadxna",
+      "texto": "Transmisión de la misa dominical, avisos parroquiales y noticias de la semana.",
+      "publicaciones": [
+        {
+          "enlace": "https://www.facebook.com/comunidadxna/posts/1793228935722848"
+        },
+        {
+          "enlace": "https://www.facebook.com/comunidadxna/posts/1791475015898240"
+        }
+      ]
+    },
+    "instagram": {
+      "texto": "Fotografía de la vida de la arquidiócesis.",
+      "fotos": []
+    },
+    "tiktok": {
+      "texto": "El Evangelio en 60 segundos, para los más jóvenes.",
+      "fotos": []
+    }
+  },
+  "historia": {
+    "visible": true,
+    "etiqueta": "Nuestra historia · Arquidiócesis de Morelia",
+    "titulo": "75 años de historia y formación al servicio de la comunidad católica",
+    "texto": "Espacio para contar quiénes somos: el origen del semanario, sus directores, su labor formativa y su servicio a la arquidiócesis. Este texto se redactará con el archivo histórico del periódico.",
+    "boton1": {
+      "texto": "Conoce nuestra historia",
+      "enlace": "#"
+    },
+    "boton2": {
+      "texto": "Hemeroteca",
+      "enlace": "#"
+    },
+    "hitos": [
+      {
+        "anio": "[Año]",
+        "titulo": "Fundación del semanario",
+        "texto": "Primer número y propósito original.",
+        "destacado": false
+      },
+      {
+        "anio": "[Año]",
+        "titulo": "Consolidación como voz de la arquidiócesis",
+        "texto": "Hitos editoriales y coberturas memorables.",
+        "destacado": false
+      },
+      {
+        "anio": "[Año]",
+        "titulo": "Edición número [1000]",
+        "texto": "Momentos clave de la publicación.",
+        "destacado": false
+      },
+      {
+        "anio": "2026",
+        "titulo": "75 aniversario y nace el portal digital",
+        "texto": "El semanario se abre a nuevas generaciones.",
+        "destacado": true
+      }
+    ]
+  },
+  "pie": {
+    "descripcion": "Semanario de orientación católica de la Arquidiócesis de Morelia.",
+    "secciones": [
+      {
+        "texto": "Edición semanal",
+        "enlace": "#edicion"
+      },
+      {
+        "texto": "Al día",
+        "enlace": "#extra"
+      },
+      {
+        "texto": "Columnas",
+        "enlace": "#edicion"
+      },
+      {
+        "texto": "Nuestra historia",
+        "enlace": "#historia"
+      },
+      {
+        "texto": "Hemeroteca PDF",
+        "enlace": "#"
+      }
+    ],
+    "servicios": [
+      {
+        "texto": "Suscripción impresa",
+        "enlace": "#"
+      },
+      {
+        "texto": "Boletín por correo / WhatsApp",
+        "enlace": "#"
+      },
+      {
+        "texto": "Publicidad y avisos parroquiales",
+        "enlace": "#"
+      },
+      {
+        "texto": "Envía tu nota parroquial",
+        "enlace": "#"
+      }
+    ],
+    "direccion": "[Dirección de la redacción], Morelia, Michoacán",
+    "telefono": "Tel. [000 000 0000]",
+    "correo": "[correo@comunidadcristiana.mx]",
+    "horario": "Lunes a viernes, 9:00 a 17:00 h",
+    "derechos": "© 2026 Comunidad Cristiana · 75 años de historia y formación",
+    "legales": [
+      {
+        "texto": "Aviso de privacidad",
+        "enlace": "#"
+      },
+      {
+        "texto": "Directorio",
+        "enlace": "#"
+      }
+    ]
+  },
+  "chat": {
+    "visible": true,
+    "sumario": [
+      {
+        "titulo": "La Voz del Pastor: «Dios invita, pero no obliga»",
+        "pagina": "2",
+        "hoja": 2
+      },
+      {
+        "titulo": "El Evangelio del domingo (Mt 22, 1-14)",
+        "pagina": "3",
+        "hoja": 3
+      },
+      {
+        "titulo": "Editorial: «¡Como me ves, te verás!»",
+        "pagina": "4",
+        "hoja": 4
+      },
+      {
+        "titulo": "Fiestas de San Miguel Arcángel",
+        "pagina": "5 a 9",
+        "hoja": 5
+      },
+      {
+        "titulo": "San Jerónimo, en Huandacareo e Irámuco",
+        "pagina": "10",
+        "hoja": 10
+      },
+      {
+        "titulo": "Toma de posesión en Coroneo, Gto.",
+        "pagina": "11",
+        "hoja": 11
+      },
+      {
+        "titulo": "Hospital de Nuestra Señora de la Salud",
+        "pagina": "12 y 13",
+        "hoja": 12
+      },
+      {
+        "titulo": "San Francisco de Asís",
+        "pagina": "14 y 15",
+        "hoja": 13
+      },
+      {
+        "titulo": "Seminario: 256 años",
+        "pagina": "16",
+        "hoja": 15
+      },
+      {
+        "titulo": "Pastoral y opinión",
+        "pagina": "17 a 19",
+        "hoja": 16
+      },
+      {
+        "titulo": "Avisos y pasatiempos",
+        "pagina": "20",
+        "hoja": 19
+      },
+      {
+        "titulo": "Cíber Comunidad",
+        "pagina": "22",
+        "hoja": 21
+      }
+    ],
+    "sugerencias": [
+      {
+        "texto": "¿Qué trae esta edición?",
+        "busqueda": "sumario"
+      },
+      {
+        "texto": "El Evangelio del domingo",
+        "busqueda": "evangelio banquete de bodas"
+      },
+      {
+        "texto": "Editorial",
+        "busqueda": "editorial como me ves te veras"
+      },
+      {
+        "texto": "Hospital",
+        "busqueda": "hospital nuevas habitaciones"
+      },
+      {
+        "texto": "Seminario",
+        "busqueda": "seminario 256 años ministerios"
+      },
+      {
+        "texto": "¿Quién dirige el periódico?",
+        "busqueda": "director"
+      }
+    ]
+  }
+}
