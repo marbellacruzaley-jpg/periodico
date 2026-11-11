@@ -1,0 +1,63 @@
+# Genera contenidos/edicion-chat.js (el índice del chat) a partir del PDF de una edición.
+# La pone en marcha el gestor en línea con el botón «Leer la edición nueva»; también se puede
+# lanzar a mano desde la pestaña «Actions» de GitHub.
+name: Indexar edición para el chat
+
+on:
+  workflow_dispatch:
+    inputs:
+      pdf:
+        description: 'PDF de la edición (por ejemplo: contenidos/Edicion 3263.pdf)'
+        required: true
+      numero:
+        description: 'Número de la edición (por ejemplo: 3,263)'
+        required: true
+      fecha:
+        description: 'Fecha (por ejemplo: domingo 11 de octubre de 2026)'
+        required: true
+
+permissions:
+  contents: write
+  pages: write
+
+concurrency: indexar-chat
+
+jobs:
+  indexar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Instalar pdftotext
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq poppler-utils
+
+      - name: Generar el índice
+        env:
+          PDF: ${{ inputs.pdf }}
+          NUMERO: ${{ inputs.numero }}
+          FECHA: ${{ inputs.fecha }}
+        run: |
+          case "$PDF" in
+            contenidos/*/*) echo "::error::El PDF debe estar directamente en contenidos/"; exit 1 ;;
+            contenidos/*.pdf|contenidos/*.PDF) ;;
+            *) echo "::error::El PDF debe estar en contenidos/"; exit 1 ;;
+          esac
+          test -f "$PDF" || { echo "::error::No existe $PDF"; exit 1; }
+          node herramientas/indexar-edicion.js "$PDF" "$NUMERO" "$FECHA"
+
+      - name: Guardar en el repositorio
+        env:
+          NUMERO: ${{ inputs.numero }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add contenidos/edicion-chat.js
+          if git diff --cached --quiet; then echo "El índice no cambió"; exit 0; fi
+          git commit -q -m "Actualizar índice del chat: edición $NUMERO"
+          git pull -q --rebase origin "$GITHUB_REF_NAME"
+          git push -q origin "HEAD:$GITHUB_REF_NAME"
+
+      - name: Publicar el sitio
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api -X POST "repos/$GITHUB_REPOSITORY/pages/builds" >/dev/null || echo "GitHub Pages publicará con el siguiente cambio"
