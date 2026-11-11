@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gestor · Comunidad Cristiana</title>
+<link rel="icon" type="image/png" href="../img/emblema-comunidad-cristiana.png">
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Literata:opsz,wght@7..72,700&family=Source+Sans+3:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="../admin/admin.css">
+</head>
+<body class="modo-visual">
+
+<!-- ============ ENTRADA ============ -->
+<div id="entrar" class="entrar" hidden>
+  <div class="entrar-tarjeta">
+    <div class="entrar-sello"><img src="../img/emblema-comunidad-cristiana.png" alt=""></div>
+    <h1>Comunidad Cristiana</h1>
+    <p>Gestor de contenido del portal</p>
+    <form id="form-entrar">
+      <div class="campo">
+        <label for="usuario">Usuario</label>
+        <input id="usuario" class="entrada" type="text" autocomplete="username" autocapitalize="none" spellcheck="false" required>
+      </div>
+      <div class="campo">
+        <label for="clave">Contraseña</label>
+        <input id="clave" class="entrada" type="password" autocomplete="current-password" required>
+      </div>
+      <p id="entrar-error" class="entrar-error" role="alert"></p>
+      <button class="btn btn-primario" type="submit">Entrar</button>
+    </form>
+  </div>
+</div>
+
+<!-- ============ GESTOR ============ -->
+<div id="app" class="app" hidden>
+  <header class="barra">
+    <a class="marca" href="../admin/">
+      <span class="marca-sello"><img src="../img/emblema-comunidad-cristiana.png" alt=""></span>
+      <span><strong>Comunidad Cristiana</strong><span>Gestor de contenido</span></span>
+    </a>
+    <div class="modos" role="group" aria-label="Modo de edición">
+      <button type="button" data-modo="visual" aria-pressed="true" title="Formulario con la página al lado: haz clic en la página para editar">
+        <svg class="ico" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M10 4v16"/></svg>Visual</button>
+      <button type="button" data-modo="contenido" aria-pressed="false" title="Solo el formulario, a pantalla completa">
+        <svg class="ico" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10"/></svg>Contenido</button>
+    </div>
+    <div class="acciones">
+      <p id="estado" class="estado" role="status"><span>Todo guardado</span></p>
+      <button type="button" id="deshacer" class="btn btn-fantasma btn-icono" title="Deshacer (Ctrl+Z)" aria-label="Deshacer" disabled>
+        <svg class="ico" viewBox="0 0 24 24"><path d="M9 14L4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 0 10h-3"/></svg></button>
+      <button type="button" id="rehacer" class="btn btn-fantasma btn-icono" title="Rehacer (Ctrl+Y)" aria-label="Rehacer" disabled>
+        <svg class="ico" viewBox="0 0 24 24"><path d="M15 14l5-5-5-5"/><path d="M20 9H9a5 5 0 0 0 0 10h3"/></svg></button>
+      <button type="button" id="btn-historial" class="btn btn-fantasma" title="Versiones guardadas">
+        <svg class="ico" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5M12 7v5l3 2"/></svg><span class="texto-opcional">Historial</span></button>
+      <a href="../" target="_blank" rel="noopener" class="btn btn-fantasma" title="Abrir el sitio publicado">
+        <svg class="ico" viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg><span class="texto-opcional">Ver sitio</span></a>
+      <button type="button" id="guardar" class="btn btn-primario" title="Guardar y publicar (Ctrl+S)">
+        <svg class="ico" viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg>Guardar y publicar</button>
+      <button type="button" id="salir" class="btn btn-fantasma btn-icono" title="Cerrar sesión" aria-label="Cerrar sesión">
+        <svg class="ico" viewBox="0 0 24 24"><path d="M15 4h4a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1h-4M10 17l5-5-5-5M15 12H3"/></svg></button>
+    </div>
+  </header>
+
+  <nav id="secciones" class="secciones" aria-label="Secciones de la página"></nav>
+
+  <main id="panel" class="panel"><div id="panel-interior" class="panel-interior"></div></main>
+
+  <section class="vista" aria-label="Vista previa">
+    <div class="vista-barra">
+      <div class="modos" role="group" aria-label="Tamaño de la vista previa">
+        <button type="button" data-dispositivo="escritorio" aria-pressed="true">Escritorio</button>
+        <button type="button" data-dispositivo="celular" aria-pressed="false">Celular</button>
+      </div>
+      <span class="vista-pista"><svg class="ico" viewBox="0 0 24 24"><path d="M9 3l10 10-4 1 3 6-2 1-3-6-4 3z"/></svg>Clic en la página para editar · doble clic para escribir</span>
+    </div>
+    <div id="vista-marco" class="vista-marco">
+      <iframe id="vista-1" class="activo" title="Vista previa de la página"></iframe>
+      <iframe id="vista-2" title="Vista previa de la página" aria-hidden="true"></iframe>
+    </div>
+  </section>
+</div>
+
+<!-- ============ DIÁLOGOS ============ -->
+<dialog id="dlg-biblioteca">
+  <div class="dialogo-cabeza">
+    <h2>Elegir una imagen</h2>
+    <label class="btn btn-chico subir">Subir nueva<input type="file" id="biblioteca-subir" accept="image/jpeg,image/png,image/webp,image/gif"></label>
+    <button type="button" class="btn btn-chico" data-cerrar>Cerrar</button>
+  </div>
+  <div class="dialogo-cuerpo"><div id="biblioteca" class="biblioteca"></div></div>
+</dialog>
+
+<dialog id="dlg-historial">
+  <div class="dialogo-cabeza">
+    <h2>Versiones guardadas</h2>
+    <button type="button" class="btn btn-chico" data-cerrar>Cerrar</button>
+  </div>
+  <div class="dialogo-cuerpo">
+    <p class="ayuda" style="margin-top:0">Cada vez que guardas, la versión anterior queda aquí. Al cargar una, la puedes revisar antes de volver a guardar.</p>
+    <ol id="versiones" class="versiones"></ol>
+  </div>
+</dialog>
+
+<div id="avisos" class="avisos" aria-live="polite"></div>
+
+<script src="../cms/plantilla.js"></script>
+<script src="../admin/esquema.js"></script>
+<script src="../admin/github.js"></script>
+<script src="../admin/admin.js"></script>
+</body>
+</html>

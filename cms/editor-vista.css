@@ -1,0 +1,9 @@
+/* Solo para la vista previa del gestor: marca lo que se puede editar */
+[data-campo] { cursor: pointer; outline: 2px dashed transparent; outline-offset: 3px; border-radius: 2px; transition: outline-color .15s, background-color .15s; }
+[data-campo]:hover { outline-color: #2F80ED; }
+.ev-activo { outline: 2px solid #2F80ED !important; background-color: rgba(47, 128, 237, .10); }
+[contenteditable] { outline: 2px solid #F4B860 !important; background-color: rgba(244, 184, 96, .15); cursor: text; }
+.ev-pista { position: fixed; z-index: 100; padding: .2rem .55rem; border-radius: 4px; background: #2F80ED; color: #fff;
+  font: 600 12px/1.4 "Source Sans 3", system-ui, sans-serif; letter-spacing: 0; text-transform: none; pointer-events: none;
+  opacity: 0; transition: opacity .12s; white-space: nowrap; box-shadow: 0 4px 12px rgba(0, 0, 0, .25); }
+.ev-pista.ev-visible { opacity: 1; }
