@@ -228,7 +228,7 @@
     const ayuda = document.createElement('p');
     ayuda.className = 'ayuda entrar-ayuda';
     ayuda.innerHTML = 'Solo la primera vez en esta computadora. ¿No tienes una? ' +
-      '<a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">Créala en GitHub</a>: ' +
+      '<a href="https://github.com/settings/personal-access-tokens/new?name=Gestor+periodico&amp;description=Gestor+en+linea+del+sitio&amp;target_name=' + DUENO + '&amp;expires_in=366&amp;contents=write&amp;actions=write" target="_blank" rel="noopener">Créala en GitHub</a>: ' +
       'elige el repositorio <strong>' + DUENO + '/' + REPO + '</strong> y en permisos marca ' +
       '<strong>Contents</strong> y <strong>Actions</strong> como «Read and write».';
     clave.closest('.campo').appendChild(ayuda);
